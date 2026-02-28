@@ -3,19 +3,21 @@ package libraries
 import (
 	"math/big"
 	"testing"
+
+	"github.com/ethereum/go-ethereum/common"
 )
 
 
 func newETH() ICurrency {
-	return NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef13", 18, "ETH", "ETH Token")
+	return NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef13"), 18, "ETH", "ETH Token")
 }
 
 func newUSDC() ICurrency {
-	return NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "USDC", "USDC Token",)
+	return NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "USDC", "USDC Token",)
 }
 
 func newDAI() ICurrency {
-	return NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef11", 18, "DAI", "DAI Token")
+	return NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef11"), 18, "DAI", "DAI Token")
 }
 
 func TestNewPrice(t *testing.T) {

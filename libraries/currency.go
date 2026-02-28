@@ -1,8 +1,7 @@
 package libraries
 
 import (
-	"strings"
-
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 )
 
@@ -19,7 +18,7 @@ var (
 
 var (
 	// ZeroAddress is the canonical zero address in Ethereum.
-	ZeroAddress = "0x0000000000000000000000000000000000000000"
+	ZeroAddress = common.Address{}
 )
 
 // isNative checks if the given address represents a native token (ETH, BNB, etc.).
@@ -29,12 +28,8 @@ var (
 //
 // Returns:
 //   - true if the address is empty, 0x0, or the canonical zero address.
-func isNative(address string) bool {
-	addr := strings.TrimSpace(strings.ToLower(address))
-
-	return addr == "" ||
-		addr == "0x0" ||
-		addr == ZeroAddress
+func isNative(address common.Address) bool {
+	return address == ZeroAddress
 }
 
 // ICurrency defines the interface for a blockchain currency/token.
@@ -43,7 +38,7 @@ type ICurrency interface {
 	IsNative() bool
 
 	// Address returns the canonical lowercase address of the token.
-	Address() string
+	Address() common.Address
 
 	// ChainId returns the chain ID of the currency.
 	ChainId() uint
@@ -68,7 +63,7 @@ type ICurrency interface {
 // Currency implements ICurrency and represents a blockchain token or native currency.
 type Currency struct {
 	isNative bool   // true if the currency is the native token of the chain
-	address  string // canonical lowercase token address
+	address  common.Address // canonical token address
 	chainId  uint   // chain ID
 	decimals uint   // number of token decimals (must be < 255)
 	symbol   string // token symbol
@@ -89,13 +84,14 @@ type Currency struct {
 //
 // Panics:
 //   - if decimals >= 255
-func NewCurrency(chainID uint, address string, decimals uint, symbol string, name string) ICurrency {
+func NewCurrency(chainID uint, address common.Address, decimals uint, symbol string, name string) ICurrency {
 	if decimals >= 255 {
 		panic("Token currency decimals must be less than 255")
 	}
+
 	return &Currency{
 		isNative: isNative(address),
-		address:  strings.ToLower(strings.TrimSpace(address)),
+		address:  address,
 		chainId:  chainID,
 		decimals: decimals,
 		symbol:   symbol,
@@ -109,7 +105,7 @@ func (c *Currency) IsNative() bool {
 }
 
 // Address returns the canonical lowercase address of the token.
-func (c *Currency) Address() string {
+func (c *Currency) Address() common.Address {
 	return c.address
 }
 
@@ -151,5 +147,5 @@ func (c *Currency) Lt(other ICurrency) (bool, error) {
 	if c.address == other.Address() {
 		return false, ErrSameAddress
 	}
-	return c.address < other.Address(), nil
+	return c.address.Big().Cmp(other.Address().Big()) < 0, nil
 }

@@ -2,17 +2,19 @@ package libraries
 
 import (
 	"testing"
+
+	"github.com/ethereum/go-ethereum/common"
 )
 
 func TestIsNative(t *testing.T) {
 	cases := []struct {
-		address string
+		address common.Address
 		native  bool
 	}{
-		{"", true},
-		{"0x0", true},
+		{common.HexToAddress(""), true},
+		{common.HexToAddress("0x0"), true},
 		{ZeroAddress, true},
-		{"0x1234567890abcdef1234567890abcdef12345678", false},
+		{common.HexToAddress("0x1234567890abcdef1234567890abcdef12345678"), false},
 	}
 
 	for _, c := range cases {
@@ -23,7 +25,7 @@ func TestIsNative(t *testing.T) {
 }
 
 func TestNewCurrencyAndGetters(t *testing.T) {
-	c := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 18, "TKN", "Token")
+	c := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 18, "TKN", "Token")
 
 	if c.ChainId() != 1 {
 		t.Errorf("expected chainId 1, got %d", c.ChainId())
@@ -43,10 +45,10 @@ func TestNewCurrencyAndGetters(t *testing.T) {
 }
 
 func TestEqual(t *testing.T) {
-	c1 := NewCurrency(1, "0xabc", 18, "A", "TokenA")
-	c2 := NewCurrency(1, "0xabc", 18, "A", "TokenA")
-	c3 := NewCurrency(1, "0xdef", 18, "B", "TokenB")
-	c4 := NewCurrency(2, "0xabc", 18, "A", "TokenA")
+	c1 := NewCurrency(1, common.HexToAddress("0xabc"), 18, "A", "TokenA")
+	c2 := NewCurrency(1, common.HexToAddress("0xabc"), 18, "A", "TokenA")
+	c3 := NewCurrency(1, common.HexToAddress("0xdef"), 18, "B", "TokenB")
+	c4 := NewCurrency(2, common.HexToAddress("0xabc"), 18, "A", "TokenA")
 
 	if !c1.Equal(c2) {
 		t.Errorf("expected c1 equal to c2")
@@ -60,10 +62,10 @@ func TestEqual(t *testing.T) {
 }
 
 func TestLt(t *testing.T) {
-	c1 := NewCurrency(1, "0xaaa", 18, "A", "TokenA")
-	c2 := NewCurrency(1, "0xbbb", 18, "B", "TokenB")
-	c3 := NewCurrency(2, "0xaaa", 18, "A", "TokenA")
-	c4 := NewCurrency(1, "0xaaa", 18, "A", "TokenA")
+	c1 := NewCurrency(1, common.HexToAddress("0xaaa"), 18, "A", "TokenA")
+	c2 := NewCurrency(1, common.HexToAddress("0xbbb"), 18, "B", "TokenB")
+	c3 := NewCurrency(2, common.HexToAddress("0xaaa"), 18, "A", "TokenA")
+	c4 := NewCurrency(1, common.HexToAddress("0xaaa"), 18, "A", "TokenA")
 
 	lt, err := c1.Lt(c2)
 	if err != nil || !lt {

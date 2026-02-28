@@ -5,10 +5,11 @@ import (
 	"testing"
 
 	"github.com/aicora/go-uniswap/utils"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 func TestFromRawAmount(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 18, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 18, "TKN", "Token")
 
 	raw := big.NewInt(1e18)
 
@@ -24,7 +25,7 @@ func TestFromRawAmount(t *testing.T) {
 }
 
 func TestOverflowPanics(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 18, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 18, "TKN", "Token")
 
 	defer func() {
 		if r := recover(); r == nil {
@@ -37,7 +38,7 @@ func TestOverflowPanics(t *testing.T) {
 }
 
 func TestAdd(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	a := FromRawAmount(token, big.NewInt(1_000_000)) // 1
 	b := FromRawAmount(token, big.NewInt(2_000_000)) // 2
@@ -50,7 +51,7 @@ func TestAdd(t *testing.T) {
 }
 
 func TestSubtract(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	a := FromRawAmount(token, big.NewInt(5_000_000))
 	b := FromRawAmount(token, big.NewInt(2_000_000))
@@ -63,7 +64,7 @@ func TestSubtract(t *testing.T) {
 }
 
 func TestMultiply(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	a := FromRawAmount(token, big.NewInt(1_000_000)) // 1
 
@@ -77,7 +78,7 @@ func TestMultiply(t *testing.T) {
 }
 
 func TestDivide(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	a := FromRawAmount(token, big.NewInt(2_000_000)) // 2
 
@@ -91,7 +92,7 @@ func TestDivide(t *testing.T) {
 }
 
 func TestToFixed(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	a := FromRawAmount(token, big.NewInt(1234567)) // 1.234567
 
@@ -101,7 +102,7 @@ func TestToFixed(t *testing.T) {
 }
 
 func TestToSignificant(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	a := FromRawAmount(token, big.NewInt(1234567)) // 1.234567
 
@@ -113,7 +114,7 @@ func TestToSignificant(t *testing.T) {
 }
 
 func TestToExactHighPrecision(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	raw := new(big.Int)
 	raw.SetString("1000000000000000001", 10)
@@ -128,7 +129,7 @@ func TestToExactHighPrecision(t *testing.T) {
 }
 
 func TestDeterministicArithmetic(t *testing.T) {
-	token := NewCurrency(1, "0xABCDEF1234567890abcdef1234567890abcdef12", 6, "TKN", "Token")
+	token := NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "TKN", "Token")
 
 	a := FromRawAmount(token, big.NewInt(1_000_000))
 	b := FromRawAmount(token, big.NewInt(2_000_000))
