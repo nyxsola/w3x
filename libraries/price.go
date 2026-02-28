@@ -1,8 +1,9 @@
 package libraries
 
 import (
-	"errors"
 	"math/big"
+
+	"github.com/pkg/errors"
 )
 
 var (
