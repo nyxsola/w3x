@@ -64,17 +64,11 @@ func TestEqual(t *testing.T) {
 func TestLt(t *testing.T) {
 	c1 := NewCurrency(1, common.HexToAddress("0xaaa"), 18, "A", "TokenA")
 	c2 := NewCurrency(1, common.HexToAddress("0xbbb"), 18, "B", "TokenB")
-	c3 := NewCurrency(2, common.HexToAddress("0xaaa"), 18, "A", "TokenA")
 	c4 := NewCurrency(1, common.HexToAddress("0xaaa"), 18, "A", "TokenA")
 
 	lt, err := c1.Lt(c2)
 	if err != nil || !lt {
 		t.Errorf("expected c1 < c2, got %v, err %v", lt, err)
-	}
-
-	_, err = c1.Lt(c3)
-	if err != ErrDifferentChain {
-		t.Errorf("expected ErrDifferentChain, got %v", err)
 	}
 
 	_, err = c1.Lt(c4)

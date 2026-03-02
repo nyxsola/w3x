@@ -83,10 +83,10 @@ func TestCalculatePositionKeyConsistency(t *testing.T) {
 	var salt [32]byte
 	copy(salt[:], []byte("salt-test"))
 
-	key1 := utils.CalculatePositionKey(owner, tickLower, tickUpper, salt)
-	key2 := utils.CalculatePositionKey(owner, tickLower, tickUpper, salt)
+	key1 := utils.ComputePositionKey(owner, tickLower, tickUpper, salt)
+	key2 := utils.ComputePositionKey(owner, tickLower, tickUpper, salt)
 	require.Equal(t, key1, key2, "same inputs should produce same key")
 
-	key3 := utils.CalculatePositionKey(owner, tickLower, tickUpper+1, salt)
+	key3 := utils.ComputePositionKey(owner, tickLower, tickUpper+1, salt)
 	require.NotEqual(t, key1, key3)
 }

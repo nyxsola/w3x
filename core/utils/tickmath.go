@@ -11,6 +11,14 @@ const (
 	MinTick = -887272
 	// MaxTick is the maximum tick that can be used on any pool.
 	MaxTick = -MinTick
+	// MinTickSpacing is the minimum allowed tick spacing in the pool.
+	// Tick spacing controls the granularity of price ticks: smaller spacing allows finer-grained prices.
+	// Must be >= 1 to ensure proper tick bitmap indexing and liquidity calculations.
+	MinTickSpacing = 1
+	// MaxTickSpacing is the maximum allowed tick spacing in the pool.
+	// Derived from the maximum value of int16 (32767), since tick spacing must fit within int16 for bitmap calculations.
+	// Larger spacing would break tick bitmap and liquidity math.
+	MaxTickSpacing = 32767
 )
 
 var (

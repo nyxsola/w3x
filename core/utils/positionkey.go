@@ -5,7 +5,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-// CalculatePositionKey generates a unique 32-byte key for a liquidity position.
+// ComputePositionKey generates a unique 32-byte key for a liquidity position.
 //
 // The key is calculated using Ethereum's Keccak256 hash function, following the same
 // packing rules as Solidity's `keccak256(abi.encodePacked(owner, tickLower, tickUpper, salt))`.
@@ -23,7 +23,7 @@ import (
 //   - The owner address must be exactly 20 bytes to match Solidity's address type.
 //   - tickLower and tickUpper use only the lower 24 bits to emulate Solidity int24 encoding.
 //   - The returned key is fully compatible with Uniswap v4 on-chain position mappings.
-func CalculatePositionKey(owner common.Address, tickLower, tickUpper int, salt [32]byte) [32]byte {
+func ComputePositionKey(owner common.Address, tickLower, tickUpper int, salt [32]byte) [32]byte {
 	buf := make([]byte, 0, 58)
 
 	// Append owner: 20 bytes

@@ -113,9 +113,9 @@ func NewPositionManager() *PositionManager {
 //
 // Notes:
 //   - This method lazily initializes the State in the internal map if it does not exist.
-//   - Position keys are generated using utils.CalculatePositionKey, compatible with Solidity keccak256(abi.encodePacked(...)).
+//   - Position keys are generated using utils.ComputePositionKey, compatible with Solidity keccak256(abi.encodePacked(...)).
 func (p *PositionManager) Get(owner common.Address, tickLower, tickUpper int, salt [32]byte) *State {
-	key := utils.CalculatePositionKey(owner, tickLower, tickUpper, salt)
+	key := utils.ComputePositionKey(owner, tickLower, tickUpper, salt)
 	state, ok := p.states[key]
 	if !ok {
 		state = &State{

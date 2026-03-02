@@ -14,21 +14,6 @@ var (
 	ErrInt128Overflow = errors.New("int128 overflow")
 )
 
-var (
-	// int128Max represents the maximum value of a signed int128:
-	//  2^127 - 1
-	int128Max = new(big.Int).Sub(
-		new(big.Int).Lsh(big.NewInt(1), 127),
-		big.NewInt(1),
-	)
-
-	// int128Min represents the minimum value of a signed int128:
-	// -2^127
-	int128Min = new(big.Int).Neg(
-		new(big.Int).Lsh(big.NewInt(1), 127),
-	)
-)
-
 // BalanceDelta represents the net change in token balances for token0 and token1.
 //
 // Solidity Equivalent:

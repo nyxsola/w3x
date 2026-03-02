@@ -26,7 +26,7 @@ func TestPoolKey_ToId(t *testing.T) {
 		currency0  ICurrency
 		currency1  ICurrency
 		fee        utils.LPFee
-		tickSpace  int32
+		tickSpace  int
 		hooks      IHooks
 		wantSwap   bool 
 	}{

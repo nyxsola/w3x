@@ -9,9 +9,6 @@ var (
 	// ErrInvalidAddressFormat is returned when a currency address is invalid.
 	ErrInvalidAddressFormat = errors.New("invalid address format")
 
-	// ErrDifferentChain is returned when two currencies belong to different chains.
-	ErrDifferentChain = errors.New("different chain")
-
 	// ErrSameAddress is returned when two currencies have the same address but ordering is required.
 	ErrSameAddress = errors.New("same address")
 )
@@ -138,12 +135,8 @@ func (c *Currency) Equal(other ICurrency) bool {
 //
 // Returns:
 //   - true if c < other
-//   - ErrDifferentChain if currencies are on different chains
 //   - ErrSameAddress if currencies have the same address
 func (c *Currency) Lt(other ICurrency) (bool, error) {
-	if c.chainId != other.ChainId() {
-		return false, ErrDifferentChain
-	}
 	if c.address == other.Address() {
 		return false, ErrSameAddress
 	}

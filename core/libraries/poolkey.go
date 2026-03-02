@@ -36,7 +36,7 @@ type PoolKey struct {
 	Currency0   ICurrency
 	Currency1   ICurrency
 	Fee         utils.LPFee
-	TickSpacing int32
+	TickSpacing int
 	Hooks       IHooks
 }
 

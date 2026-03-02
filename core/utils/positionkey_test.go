@@ -14,7 +14,7 @@ func TestCalculatePositionKey(t *testing.T) {
 	tickUpper := int(150)
 	salt := [32]byte{}
 
-	key := CalculatePositionKey(owner, tickLower, tickUpper, salt)
+	key := ComputePositionKey(owner, tickLower, tickUpper, salt)
 
 	expectedHex := "d9c6351d73ec1a9706a2e596213ff513744be32f0a6f58fa0b423f43619f95a3"
 	if expectedHex != "" {
