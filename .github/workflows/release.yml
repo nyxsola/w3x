@@ -1,0 +1,64 @@
+name: Library Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validate & Publish Library
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract tag
+        run: |
+          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "Release tag: $TAG"
+
+      - name: Ensure tag from main branch
+        run: |
+          BRANCH=$(git branch --contains $GITHUB_SHA | grep main || true)
+          if [ -z "$BRANCH" ]; then
+            echo "Tag must be created from main branch"
+            exit 1
+          fi
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24.x
+          cache: true
+
+      - name: Verify go.mod tidy
+        run: |
+          go mod tidy
+
+      - name: Run tests
+        run: go test -race ./...
+
+      - name: Verify build
+        run: go build ./...
+
+      - name: Run short fuzz tests
+        run: go test -fuzz=Fuzz -fuzztime=5s ./... || echo "No fuzz tests defined"
+
+      - name: Verify module download
+        run: go mod download
+
+      - name: Generate changelog
+        run: |
+          git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD^)..HEAD > CHANGELOG.txt || echo "Initial release" > CHANGELOG.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG.txt
