@@ -88,7 +88,7 @@ func (tb *TickBitmap) FlipTick(tick int, tickSpacing int) error {
 	compressed := compress(tick, tickSpacing)
 	wordPos, bitPos := position(compressed)
 
-	mask := big.NewInt(0).SetUint64(1)
+	mask := big.NewInt(1)
 	mask.Lsh(mask, uint(bitPos)) // Create a mask with a 1 at bitPos
 
 	word, ok := tb.words[wordPos]
@@ -121,43 +121,49 @@ func (tb *TickBitmap) NextInitializedTickWithinOneWord(tick int, tickSpacing int
 		if !ok {
 			word = big.NewInt(0)
 		}
-
-		// Mask to include all bits <= bitPos
-		mask := new(big.Int).Lsh(big.NewInt(1), uint(bitPos+1)) 
-		mask.Sub(mask, big.NewInt(1))                              
+		maxUint256 := new(big.Int).Sub(new(big.Int).Lsh(big.NewInt(1), 256), big.NewInt(1))
+		mask := new(big.Int).Rsh(maxUint256, uint(255 - bitPos))                          
 		masked := big.NewInt(0).And(word, mask)                   
 
-		if masked.Sign() == 0 {
-			// No initialized ticks ≤ current tick in this word
-			return (compressed - int(bitPos)) * tickSpacing, false, nil
+		initialized = masked.Sign() != 0
+		
+		if initialized {
+			msb, err := utils.MostSignificantBit(masked)
+			if err != nil {
+				return 0, false, err
+			}
+			next = (compressed - (int(bitPos) - msb)) * tickSpacing
+		} else {
+			next = (compressed - int(bitPos)) * tickSpacing
 		}
-
-		// Find most significant bit (highest initialized tick ≤ compressed)
-		msb, err := utils.MostSignificantBit(masked)
-		if err != nil {
-			return 0, false, err
-		}
-		return (compressed - (int(bitPos)-msb)) * tickSpacing, true, nil
 	} else {
 		compressed++
 		wordPos, bitPos := position(compressed)
+		
 		word, ok := tb.words[wordPos]
 		if !ok {
 			word = big.NewInt(0)
 		}
 
-		// Shift word right to start search from bitPos
-		mask := new(big.Int).Rsh(new(big.Int).Set(word), uint(bitPos)) 
-		if mask.Sign() == 0 {
-			// No initialized ticks > current tick in this word
-			return (compressed + int(255-bitPos)) * tickSpacing, false, nil
-		}
+		mask := new(big.Int).Lsh(big.NewInt(1), uint(bitPos)) 
+		mask.Sub(mask, big.NewInt(1))                  
+		mask.Not(mask)                                 
 
-		// Find least significant bit (lowest initialized tick ≥ compressed)
-		lsb, err := utils.LeastSignificantBit(mask)
-		if err != nil {
-			return 0, false, err
+		masked := new(big.Int).And(word, mask)
+
+		// if there are no initialized ticks to the left of the current tick, return leftmost in the word
+		initialized = masked.Sign() != 0
+
+		if initialized {
+			lsb, err := utils.LeastSignificantBit(masked)
+			if err != nil {
+				return 0, false, err
+			}
+			next = (compressed + (lsb-int(bitPos))) * tickSpacing
+		} else {
+			next = (compressed + (255 - int(bitPos))) * tickSpacing
 		}
-		return (compressed + int(lsb)) * tickSpacing, true, nil
 	}
+
+	return
 }

@@ -2,6 +2,8 @@ package libraries
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTickBitmap_FlipAndIsInitialized(t *testing.T) {
@@ -56,28 +58,84 @@ func TestTickBitmap_FlipTick(t *testing.T) {
 
 func TestNextInitializedTickWithinOneWord(t *testing.T) {
 	tb := NewTickBitmap()
-	tickSpacing := int(10)
 
-	// Initialize some ticks
-	tb.FlipTick(20, tickSpacing)
-	tb.FlipTick(50, tickSpacing)
-	tb.FlipTick(200, tickSpacing)
+	tickSpacing := 1
 
-	// Search lte
-	next, initialized, err := tb.NextInitializedTickWithinOneWord(45, tickSpacing, true)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if !initialized || next != 20 {
-		t.Errorf("expected 20, got %d", next)
+	tb.FlipTick(5, tickSpacing)
+	tb.FlipTick(10, tickSpacing)
+	tb.FlipTick(250, tickSpacing)
+
+	tests := []struct {
+		name        string
+		tick        int
+		lte         bool
+		wantNext    int
+		wantInit    bool
+	}{
+		{
+			name:     "lte=true, tick below first initialized",
+			tick:     2,
+			lte:      true,
+			wantNext: 0,
+			wantInit: false,
+		},
+		{
+			name:     "lte=true, tick exactly on initialized",
+			tick:     10,
+			lte:      true,
+			wantNext: 10,
+			wantInit: true,
+		},
+		{
+			name:     "lte=true, tick between initialized",
+			tick:     7,
+			lte:      true,
+			wantNext: 5,
+			wantInit: true,
+		},
+		{
+			name:     "lte=false, tick below first initialized",
+			tick:     2,
+			lte:      false,
+			wantNext: 5,
+			wantInit: true,
+		},
+		{
+			name:     "lte=false, tick exactly on initialized",
+			tick:     10,
+			lte:      false,
+			wantNext: 250,
+			wantInit: true,
+		},
+		{
+			name:     "lte=false, tick between initialized",
+			tick:     6,
+			lte:      false,
+			wantNext: 10,
+			wantInit: true,
+		},
+		{
+			name:     "lte=true, tick above highest initialized",
+			tick:     255,
+			lte:      true,
+			wantNext: 250,
+			wantInit: true,
+		},
+		{
+			name:     "lte=false, tick above highest initialized",
+			tick:     255,
+			lte:      false,
+			wantNext: 511, 
+			wantInit: false,
+		},
 	}
 
-	// Search gt
-	next, initialized, err = tb.NextInitializedTickWithinOneWord(45, tickSpacing, false)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if !initialized || next != 50 {
-		t.Errorf("expected 50, got %d", next)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, init, err := tb.NextInitializedTickWithinOneWord(tt.tick, tickSpacing, tt.lte)
+			assert.NoError(t, err)
+			assert.Equal(t, tt.wantNext, got)
+			assert.Equal(t, tt.wantInit, init)
+		})
 	}
 }

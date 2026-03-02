@@ -46,12 +46,22 @@ var (
 //   - Implements rounding up for fee calculations via MulDivRoundingUp
 //   - Mirrors Uniswap V3 core swap step logic
 func ComputeSwapStep(sqrtPriceCurrentX96, sqrtPriceTargetX96, liquidity, amountRemaining *big.Int, feePips uint32) (sqrtPriceNextX96, amountIn, amountOut, feeAmount *big.Int, err error) {
+	sqrtPriceNextX96 = new(big.Int)
+	amountIn = new(big.Int)
+	amountOut = new(big.Int)
+	feeAmount = new(big.Int)
+
+	_feePips := feePips
 	zeroForOne := sqrtPriceCurrentX96.Cmp(sqrtPriceTargetX96) >= 0
-	exactIn := amountRemaining.Cmp(big.NewInt(0)) >= 0
+	exactIn := amountRemaining.Sign() < 0
 
 	if exactIn {
 		// deduct fee from remaining input
-		amountRemainingLessFee := new(big.Int).Div(new(big.Int).Mul(amountRemaining, new(big.Int).Sub(MaxSwapFee, big.NewInt(int64(feePips)))), MaxSwapFee)
+		amountRemainingLessFee := new(big.Int)
+		amountRemainingLessFee, err = MulDiv(new(big.Int).Abs(amountRemaining), new(big.Int).Sub(MaxSwapFee, big.NewInt(int64(feePips))), MaxSwapFee)
+		if err != nil {
+			return
+		}
 		if zeroForOne {
 			amountIn, err = GetAmount0Delta(sqrtPriceTargetX96, sqrtPriceCurrentX96, liquidity, true)
 			if err != nil {
@@ -65,14 +75,38 @@ func ComputeSwapStep(sqrtPriceCurrentX96, sqrtPriceTargetX96, liquidity, amountR
 		}
 		if amountRemainingLessFee.Cmp(amountIn) >= 0 {
 			sqrtPriceNextX96 = sqrtPriceTargetX96
+			if int64(_feePips) == MaxSwapFee.Int64() {
+				feeAmount.Set(amountIn)
+			} else {
+				tmp := new(big.Int)
+				denominator := new(big.Int).Sub(MaxSwapFee, big.NewInt(int64(_feePips)))
+				tmp, err = MulDivRoundingUp(amountIn, big.NewInt(int64(_feePips)), denominator)
+				if err != nil {
+					return
+				}
+				feeAmount.Set(tmp)
+			}
 		} else {
+			// exhaust the remaining amount
+        	amountIn.Set(amountRemainingLessFee)
 			sqrtPriceNextX96, err = GetNextSqrtPriceFromInput(sqrtPriceCurrentX96, liquidity, amountRemainingLessFee, zeroForOne)
+			if err != nil {
+				return
+			}
+			feeAmount.Set(new(big.Int).Sub(new(big.Int).Abs(amountRemaining), amountIn))
+		}
+		if zeroForOne {
+			amountOut, err = GetAmount1Delta(sqrtPriceNextX96, sqrtPriceCurrentX96, liquidity, false)
+			if err != nil {
+				return
+			}
+		} else {
+			amountOut, err = GetAmount0Delta(sqrtPriceCurrentX96, sqrtPriceNextX96, liquidity, false)
 			if err != nil {
 				return
 			}
 		}
 	} else {
-		// exact output swap
 		if zeroForOne {
 			amountOut, err = GetAmount1Delta(sqrtPriceTargetX96, sqrtPriceCurrentX96, liquidity, false)
 			if err != nil {
@@ -84,61 +118,39 @@ func ComputeSwapStep(sqrtPriceCurrentX96, sqrtPriceTargetX96, liquidity, amountR
 				return
 			}
 		}
-		if new(big.Int).Mul(amountRemaining, big.NewInt(-1)).Cmp(amountOut) >= 0 {
-			sqrtPriceNextX96 = sqrtPriceTargetX96
+		
+		if (amountRemaining.Cmp(amountOut) >= 0) {
+			// `amountOut` is capped by the target price
+			sqrtPriceNextX96.Set(sqrtPriceTargetX96)
 		} else {
-			sqrtPriceNextX96, err = GetNextSqrtPriceFromOutput(sqrtPriceCurrentX96, liquidity, new(big.Int).Mul(amountRemaining, big.NewInt(-1)), zeroForOne)
+			// cap the output amount to not exceed the remaining output amount
+			amountOut.Set(amountRemaining)
+			sqrtPriceNextX96, err = GetNextSqrtPriceFromOutput(sqrtPriceCurrentX96, liquidity, amountOut, zeroForOne)
 			if err != nil {
 				return
 			}
 		}
-	}
 
-	max := sqrtPriceTargetX96.Cmp(sqrtPriceNextX96) == 0
-
-	// compute actual input/output deltas based on swap direction and whether max reached
-	if zeroForOne {
-		if !(max && exactIn) {
+		if zeroForOne {
 			amountIn, err = GetAmount0Delta(sqrtPriceNextX96, sqrtPriceCurrentX96, liquidity, true)
 			if err != nil {
 				return
 			}
-		}
-		if !(max && !exactIn) {
-			amountOut, err = GetAmount1Delta(sqrtPriceNextX96, sqrtPriceCurrentX96, liquidity, false)
-			if err != nil {
-				return
-			}
-		}
-	} else {
-		if !(max && exactIn) {
+		} else {
 			amountIn, err = GetAmount1Delta(sqrtPriceCurrentX96, sqrtPriceNextX96, liquidity, true)
 			if err != nil {
 				return
 			}
 		}
-		if !(max && !exactIn) {
-			amountOut, err = GetAmount0Delta(sqrtPriceCurrentX96, sqrtPriceNextX96, liquidity, false)
-			if err != nil {
-				return
-			}
-		}
-	}
 
-	// clamp output for exact output swaps
-	if !exactIn && amountOut.Cmp(new(big.Int).Mul(amountRemaining, big.NewInt(-1))) > 0 {
-		amountOut = new(big.Int).Mul(amountRemaining, big.NewInt(-1))
-	}
-
-	// compute fee amount
-	if exactIn && sqrtPriceNextX96.Cmp(sqrtPriceTargetX96) != 0 {
-		// target not reached, remainder is fee
-		feeAmount = new(big.Int).Sub(amountRemaining, amountIn)
-	} else {
-		feeAmount, err = MulDivRoundingUp(amountIn, big.NewInt(int64(feePips)), new(big.Int).Sub(MaxSwapFee, big.NewInt(int64(feePips))))
+		// `feePips` cannot be `MAX_SWAP_FEE` for exact out
+		tmp := new(big.Int)
+		denominator := new(big.Int).Sub(MaxSwapFee, big.NewInt(int64(_feePips)))
+		tmp, err = MulDivRoundingUp(amountIn, big.NewInt(int64(_feePips)), denominator)
 		if err != nil {
 			return
 		}
+		feeAmount.Set(tmp)
 	}
 
 	return

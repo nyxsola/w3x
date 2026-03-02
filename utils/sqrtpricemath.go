@@ -79,7 +79,7 @@ func GetAmount0Delta(sqrtPriceAX96, sqrtPriceBX96, liquidity *big.Int, roundUp b
 		if err != nil {
 			return nil, err
 		}
-
+		
 		// ceil( temp / sqrtA )
 		result, err := MulDivRoundingUp(temp, big.NewInt(1), sqrtPriceAX96)
 		if err != nil {

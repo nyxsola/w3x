@@ -70,8 +70,8 @@ var (
 )
 
 // GetSqrtPriceAtTick returns the square root price (Q64.96) for a given tick.
-// - tick: The tick index (must be between MinTick and MaxTick).
-// - Returns a *big.Int representing sqrtPriceX96.
+//  - tick: The tick index (must be between MinTick and MaxTick).
+//  - Returns a *big.Int representing sqrtPriceX96.
 // This mirrors the Uniswap v4 on-chain logic for gas-efficient fixed-point computation.
 func GetSqrtPriceAtTick(tick int) (*big.Int, error) {
 	if tick < MinTick || tick > MaxTick {

@@ -81,12 +81,12 @@ type Pool struct {
 }
 
 // NewPool creates an uninitialized pool instance.
-func NewPool(tickManager ITickManager) *Pool {
+func NewPool() *Pool {
 	return &Pool {
 		feeGrowthGlobal0X128: big.NewInt(0),
 		feeGrowthGlobal1X128: big.NewInt(0),
 		liquidity: big.NewInt(0),
-		tickManager: tickManager,
+		tickManager: NewTickManager(),
 		positionManager: NewPositionManager(),
 	}
 }
@@ -106,7 +106,7 @@ func (p *Pool) Initialize(sqrtPriceX96 *big.Int, lpFee utils.LPFee) (int, error)
 	}
 
 	p.slot0 = Slot0{
-		SqrtPriceX96: sqrtPriceX96,
+		SqrtPriceX96: new(big.Int).Set(sqrtPriceX96),
 		Tick:         tick,
 		LPFee:        lpFee,
 		ProtocolFee:  0,
@@ -626,7 +626,7 @@ func (p *Pool) Swap(params SwapParams) (swapDelta BalanceDelta, amountToProtocol
 			return
 		}
 	}
-
+	
 	if protocolFee == 0 {
 		swapFee = uint32(lpFee)
 	} else {
