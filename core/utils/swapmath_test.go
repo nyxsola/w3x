@@ -33,7 +33,37 @@ func TestComputeSwapStepExactInZeroForOne(t *testing.T) {
 	liquidity := big.NewInt(1_000_000)
 	sqrtPriceCurrent := big.NewInt(100)
 	sqrtPriceTarget := big.NewInt(120)
+	amountRemaining := big.NewInt(-10_000)
+	feePips := uint32(3000)
+
+	sqrtNext, amountIn, amountOut, feeAmount, err := ComputeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips)
+	require.NoError(t, err)
+	require.NotNil(t, sqrtNext)
+	require.NotNil(t, amountIn)
+	require.NotNil(t, amountOut)
+	require.NotNil(t, feeAmount)
+}
+
+func TestComputeSwapStepExactOutZeroForOne(t *testing.T) {
+	liquidity := big.NewInt(1_000_000)
+	sqrtPriceCurrent := big.NewInt(100)
+	sqrtPriceTarget := big.NewInt(120)
 	amountRemaining := big.NewInt(10_000)
+	feePips := uint32(3000)
+
+	sqrtNext, amountIn, amountOut, feeAmount, err := ComputeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips)
+	require.NoError(t, err)
+	require.NotNil(t, sqrtNext)
+	require.NotNil(t, amountIn)
+	require.NotNil(t, amountOut)
+	require.NotNil(t, feeAmount)
+}
+
+func TestComputeSwapStepExactInOneForZero(t *testing.T) {
+	liquidity := big.NewInt(1_000_000)
+	sqrtPriceCurrent := big.NewInt(120)
+	sqrtPriceTarget := big.NewInt(100)
+	amountRemaining := big.NewInt(-5_000) 
 	feePips := uint32(3000)
 
 	sqrtNext, amountIn, amountOut, feeAmount, err := ComputeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips)
@@ -48,7 +78,7 @@ func TestComputeSwapStepExactOutOneForZero(t *testing.T) {
 	liquidity := big.NewInt(1_000_000)
 	sqrtPriceCurrent := big.NewInt(120)
 	sqrtPriceTarget := big.NewInt(100)
-	amountRemaining := big.NewInt(-5_000) // exact output
+	amountRemaining := big.NewInt(5_000) 
 	feePips := uint32(3000)
 
 	sqrtNext, amountIn, amountOut, feeAmount, err := ComputeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips)
