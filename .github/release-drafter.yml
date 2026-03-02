@@ -1,0 +1,37 @@
+name-template: "${{ github.ref_name }}"
+tag-template: "${{ github.ref_name }}"
+
+categories:
+  - title: "Bug Fixes"
+    labels:
+      - "bug"
+      - "fix"
+      - "compat"
+  - title: "Features"
+    labels:
+      - "feature"
+      - "feat"
+  - title: "Performance Improvements"
+    labels:
+      - "perf"
+  - title: "Documentation"
+    labels:
+      - "docs"
+  - title: "Refactoring"
+    labels:
+      - "refactor"
+  - title: "Tests"
+    labels:
+      - "test"
+  - title: "Chores"
+    labels:
+      - "chore"
+  - title: "CI"
+    labels:
+      - "ci"
+
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+template: |
+  ## $NAME ($DATE)
+
+  $CHANGES
