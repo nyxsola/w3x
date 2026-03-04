@@ -9,13 +9,15 @@ import (
 // zkSync-specific CREATE2 deployment scheme.
 //
 // Parameters:
-//   sender       - Hex-encoded deployer address (0x-prefixed).
-//   bytecodeHash - Keccak256 hash of the contract bytecode.
-//   salt         - 32-byte CREATE2 salt.
-//   input        - Constructor calldata (optional; pass nil for empty input).
+//
+//	sender       - Hex-encoded deployer address (0x-prefixed).
+//	bytecodeHash - Keccak256 hash of the contract bytecode.
+//	salt         - 32-byte CREATE2 salt.
+//	input        - Constructor calldata (optional; pass nil for empty input).
 //
 // Returns:
-//   The derived contract address as a checksummed common.Address.
+//
+//	The derived contract address as a checksummed common.Address.
 //
 // Notes:
 //   - This function does not perform validation on salt or bytecodeHash length.

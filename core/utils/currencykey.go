@@ -20,9 +20,8 @@ import (
 //
 // Example usage:
 //
-//    key := ComputeCurrencySlotKey(userAddress, tokenAddress)
-//    deltaMap[key] = newValue
-//
+//	key := ComputeCurrencySlotKey(userAddress, tokenAddress)
+//	deltaMap[key] = newValue
 func ComputeCurrencySlotKey(owner, currency common.Address) [32]byte {
 	buf := make([]byte, 0, 40)
 

@@ -32,12 +32,12 @@ var (
 // Behavior:
 //   - Determines the swap direction (zeroForOne) based on current and target sqrt prices.
 //   - For exact input swaps:
-//       * Deducts the fee from the remaining input amount
-//       * Checks if target price can be reached with remaining input
-//       * If not, computes next sqrt price using GetNextSqrtPriceFromInput
+//   - Deducts the fee from the remaining input amount
+//   - Checks if target price can be reached with remaining input
+//   - If not, computes next sqrt price using GetNextSqrtPriceFromInput
 //   - For exact output swaps:
-//       * Checks if target price can be reached with remaining output
-//       * If not, computes next sqrt price using GetNextSqrtPriceFromOutput
+//   - Checks if target price can be reached with remaining output
+//   - If not, computes next sqrt price using GetNextSqrtPriceFromOutput
 //   - Computes the input/output amounts based on liquidity and swap direction
 //   - Calculates the fee amount depending on whether target price was fully reached
 //
@@ -88,7 +88,7 @@ func ComputeSwapStep(sqrtPriceCurrentX96, sqrtPriceTargetX96, liquidity, amountR
 			}
 		} else {
 			// exhaust the remaining amount
-        	amountIn.Set(amountRemainingLessFee)
+			amountIn.Set(amountRemainingLessFee)
 			sqrtPriceNextX96, err = GetNextSqrtPriceFromInput(sqrtPriceCurrentX96, liquidity, amountRemainingLessFee, zeroForOne)
 			if err != nil {
 				return
@@ -118,8 +118,8 @@ func ComputeSwapStep(sqrtPriceCurrentX96, sqrtPriceTargetX96, liquidity, amountR
 				return
 			}
 		}
-		
-		if (amountRemaining.Cmp(amountOut) >= 0) {
+
+		if amountRemaining.Cmp(amountOut) >= 0 {
 			// `amountOut` is capped by the target price
 			sqrtPriceNextX96.Set(sqrtPriceTargetX96)
 		} else {
@@ -155,7 +155,6 @@ func ComputeSwapStep(sqrtPriceCurrentX96, sqrtPriceTargetX96, liquidity, amountR
 
 	return
 }
-
 
 // GetSqrtPriceTarget computes the next sqrt price for a swap step.
 //

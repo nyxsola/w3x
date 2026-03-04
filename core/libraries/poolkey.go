@@ -104,7 +104,7 @@ func (p *PoolKey) ToId() (PoolId, error) {
 	if err != nil {
 		return PoolId{}, err
 	}
-	
+
 	// Compute keccak256 hash to produce PoolId
 	return PoolId(crypto.Keccak256Hash(packed)), nil
 }

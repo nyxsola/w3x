@@ -59,12 +59,12 @@ type ICurrency interface {
 
 // Currency implements ICurrency and represents a blockchain token or native currency.
 type Currency struct {
-	isNative bool   // true if the currency is the native token of the chain
+	isNative bool           // true if the currency is the native token of the chain
 	address  common.Address // canonical token address
-	chainId  uint   // chain ID
-	decimals uint   // number of token decimals (must be < 255)
-	symbol   string // token symbol
-	name     string // token name
+	chainId  uint           // chain ID
+	decimals uint           // number of token decimals (must be < 255)
+	symbol   string         // token symbol
+	name     string         // token name
 }
 
 // NewCurrency creates a new Currency instance.

@@ -36,7 +36,7 @@ func NewCurrencyDelta() *CurrencyDelta {
 //
 // Example usage:
 //
-//    delta := cd.GetDelta(userAddress, tokenAddress)
+//	delta := cd.GetDelta(userAddress, tokenAddress)
 func (cd *CurrencyDelta) GetDelta(owner, currency common.Address) *big.Int {
 	slot := utils.ComputeCurrencySlotKey(owner, currency)
 	if val, ok := cd.deltas[slot]; ok {
@@ -61,7 +61,7 @@ func (cd *CurrencyDelta) GetDelta(owner, currency common.Address) *big.Int {
 //
 // Example usage:
 //
-//    prev, next := cd.ApplyDelta(userAddress, tokenAddress, big.NewInt(100))
+//	prev, next := cd.ApplyDelta(userAddress, tokenAddress, big.NewInt(100))
 func (cd *CurrencyDelta) ApplyDelta(owner, currency common.Address, delta *big.Int) (previous, next *big.Int) {
 	slot := utils.ComputeCurrencySlotKey(owner, currency)
 	previous = cd.GetDelta(owner, currency)

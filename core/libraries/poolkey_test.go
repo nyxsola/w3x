@@ -21,13 +21,13 @@ func TestPoolKey_ToId(t *testing.T) {
 	hooks := mockHooks{addr: common.HexToAddress("0x0000000000000000000000000000000000000000")}
 
 	tests := []struct {
-		name       string
-		currency0  ICurrency
-		currency1  ICurrency
-		fee        LPFee
-		tickSpace  int
-		hooks      IHooks
-		wantSwap   bool 
+		name      string
+		currency0 ICurrency
+		currency1 ICurrency
+		fee       LPFee
+		tickSpace int
+		hooks     IHooks
+		wantSwap  bool
 	}{
 		{
 			name:      "normal order",

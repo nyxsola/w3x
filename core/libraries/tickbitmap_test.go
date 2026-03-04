@@ -66,11 +66,11 @@ func TestNextInitializedTickWithinOneWord(t *testing.T) {
 	tb.FlipTick(250, tickSpacing)
 
 	tests := []struct {
-		name        string
-		tick        int
-		lte         bool
-		wantNext    int
-		wantInit    bool
+		name     string
+		tick     int
+		lte      bool
+		wantNext int
+		wantInit bool
 	}{
 		{
 			name:     "lte=true, tick below first initialized",
@@ -125,7 +125,7 @@ func TestNextInitializedTickWithinOneWord(t *testing.T) {
 			name:     "lte=false, tick above highest initialized",
 			tick:     255,
 			lte:      false,
-			wantNext: 511, 
+			wantNext: 511,
 			wantInit: false,
 		},
 	}

@@ -11,7 +11,7 @@ import "math/big"
 //   - LiquidityDelta: the amount of liquidity to add (positive) or remove (negative)
 //   - Salt: optional value to differentiate multiple positions at the same tick range
 type ModifyLiquidityParams struct {
-	TickLower      int   // int24 in Solidity, mapped to int32 in Go
+	TickLower      int // int24 in Solidity, mapped to int32 in Go
 	TickUpper      int
 	LiquidityDelta *big.Int
 	Salt           [32]byte
@@ -25,7 +25,7 @@ type ModifyLiquidityParams struct {
 //   - AmountSpecified: desired input (negative for exactIn) or output (positive for exactOut)
 //   - SqrtPriceLimitX96: sqrt price at which the swap stops, in Q64.96 fixed point format
 type SwapParams struct {
-	ZeroForOne       bool
-	AmountSpecified  *big.Int
+	ZeroForOne        bool
+	AmountSpecified   *big.Int
 	SqrtPriceLimitX96 *big.Int // uint160 in Solidity, mapped to big.Int
 }

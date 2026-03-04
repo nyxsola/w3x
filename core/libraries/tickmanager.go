@@ -73,8 +73,8 @@ type TickManager struct {
 // NewTickManager creates and returns a new TickManager instance.
 func NewTickManager() *TickManager {
 	return &TickManager{
-		infos: make(map[int]*TickInfo),
-		bitmap:    NewTickBitmap(),
+		infos:  make(map[int]*TickInfo),
+		bitmap: NewTickBitmap(),
 	}
 }
 

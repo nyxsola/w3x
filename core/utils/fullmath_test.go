@@ -14,9 +14,9 @@ func TestMulDiv(t *testing.T) {
 		wantErr   bool
 	}{
 		{a: 10, b: 20, den: 5, want: 40},
-		{a: 1, b: 1, den: 2, want: 0}, // floor(0.5)
+		{a: 1, b: 1, den: 2, want: 0},                // floor(0.5)
 		{a: 2, b: 3, den: 0, want: 0, wantErr: true}, // zero denominator
-		{a: 0, b: 100, den: 5, want: 0}, // zero multiplicand
+		{a: 0, b: 100, den: 5, want: 0},              // zero multiplicand
 	}
 
 	for _, tt := range tests {

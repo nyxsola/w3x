@@ -17,8 +17,8 @@ import (
 //
 // Mathematical Model:
 //
-// 	rawAmount = numerator / denominator
-// 	displayAmount = rawAmount / 10^decimals
+//	rawAmount = numerator / denominator
+//	displayAmount = rawAmount / 10^decimals
 //
 // Invariants:
 //
@@ -52,14 +52,15 @@ type CurrencyAmount struct {
 //
 // Example:
 // If token has 18 decimals:
-// 	1 token = 1e18 raw units
+//
+//	1 token = 1e18 raw units
 //
 // Equivalent to:
-// 	newCurrencyAmount(currency, rawAmount, 1)
+//
+//	newCurrencyAmount(currency, rawAmount, 1)
 func FromRawAmount(currency ICurrency, rawAmount *big.Int) *CurrencyAmount {
 	return newCurrencyAmount(currency, rawAmount, big.NewInt(1))
 }
-
 
 // FromFractionalAmount constructs a CurrencyAmount from a rational value.
 //
@@ -87,8 +88,8 @@ func newCurrencyAmount(currency ICurrency, numerator, denominator *big.Int) *Cur
 	}
 
 	return &CurrencyAmount{
-		Currency:     currency,
-		Fraction:     f,
+		Currency: currency,
+		Fraction: f,
 		DecimalScale: new(big.Int).Exp(
 			big.NewInt(10),
 			big.NewInt(int64(currency.Decimals())),
@@ -99,7 +100,7 @@ func newCurrencyAmount(currency ICurrency, numerator, denominator *big.Int) *Cur
 
 // Add returns a new CurrencyAmount equal to:
 //
-// 	c + other
+//	c + other
 //
 // Requirements:
 // - Both amounts MUST reference the same currency.
@@ -114,7 +115,7 @@ func (c *CurrencyAmount) Add(other *CurrencyAmount) *CurrencyAmount {
 
 // Subtract returns:
 //
-// 	c - other
+//	c - other
 //
 // Negative results are allowed at Fraction level.
 // Higher-level logic should validate business constraints.
@@ -167,8 +168,9 @@ func (c *CurrencyAmount) ToSignificant(significantDigits int32) string {
 //
 // Example:
 // Token decimals = 6
-// 	raw = 1234567
-// 	ToFixed(2) => "1.23"
+//
+//	raw = 1234567
+//	ToFixed(2) => "1.23"
 func (c *CurrencyAmount) ToFixed(decimalPlaces int32) string {
 	if uint(decimalPlaces) > c.Currency.Decimals() {
 		panic("DECIMAL_PLACES_EXCEED_TOKEN_DECIMALS")

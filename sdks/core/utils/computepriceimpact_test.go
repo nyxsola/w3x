@@ -16,7 +16,6 @@ func usdcToken() libraries.ICurrency {
 	return libraries.NewCurrency(1, common.HexToAddress("0xUSDC000000000000000000000000000000000"), 6, "USDC", "US Dollar Coin")
 }
 
-
 func TestComputePriceImpact(t *testing.T) {
 	ETH := ethToken()
 	USDC := usdcToken()
