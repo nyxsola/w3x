@@ -6,7 +6,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/aicora/go-uniswap?logo=codecov&colorB=orange)](https://app.codecov.io/gh/aicora/go-uniswap)
 [![Go Report Card](https://goreportcard.com/badge/github.com/aicora/go-uniswap)](https://goreportcard.com/report/github.com/aicora/go-uniswap)
 [![Go Reference](https://img.shields.io/badge/Go%20Reference-blue.svg?logo=go&logoColor=white)](https://pkg.go.dev/github.com/aicora/go-uniswap)
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/aicora/go-uniswap/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-GPL-2.0-green)](https://github.com/aicora/go-uniswap/blob/main/LICENSE)
 [![Good First Issues](https://img.shields.io/github/issues/aicora/go-uniswap/good%20first%20issue?logo=github)](https://github.com/aicora/go-uniswap/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22good+first+issue%22)
 [![Language](https://img.shields.io/badge/Language-Go-blue.svg?logo=go&logoColor=white)](https://golang.org/)
 
@@ -39,6 +39,6 @@ Thank you to all the people who already contributed to go-uniswap!
 
 ## License
 
-[MIT](https://opensource.org/licenses/MIT)
+[GPL-2.0](https://opensource.org/license/gpl-2-0-only)
 
 Copyright (c) 2026-present, Aicora
