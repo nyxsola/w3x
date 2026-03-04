@@ -1,4 +1,4 @@
-package libraries
+package sdkcore
 
 import (
 	"math/big"

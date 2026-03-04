@@ -43,7 +43,7 @@ var ZeroBalanceDelta = BalanceDelta{
 }
 
 // NewBalanceDelta returns a new BalanceDelta value.
-func NewBalanceDelta(amount0, amount1 *big.Int) (BalanceDelta) {
+func NewBalanceDelta(amount0, amount1 *big.Int) BalanceDelta {
 	return BalanceDelta{
 		Amount0: new(big.Int).Set(amount0),
 		Amount1: new(big.Int).Set(amount1),
@@ -55,7 +55,7 @@ func NewBalanceDelta(amount0, amount1 *big.Int) (BalanceDelta) {
 // Equivalent to Solidity's `add(BalanceDelta a, BalanceDelta b)`.
 //
 // The result is validated against int128 bounds.
-func (a BalanceDelta) Add(b BalanceDelta) (BalanceDelta) {
+func (a BalanceDelta) Add(b BalanceDelta) BalanceDelta {
 	res0 := new(big.Int).Add(a.Amount0, b.Amount0)
 	res1 := new(big.Int).Add(a.Amount1, b.Amount1)
 
@@ -67,7 +67,7 @@ func (a BalanceDelta) Add(b BalanceDelta) (BalanceDelta) {
 // Equivalent to Solidity's `sub(BalanceDelta a, BalanceDelta b)`.
 //
 // The result is validated against int128 bounds.
-func (a BalanceDelta) Sub(b BalanceDelta) (BalanceDelta) {
+func (a BalanceDelta) Sub(b BalanceDelta) BalanceDelta {
 	res0 := new(big.Int).Sub(a.Amount0, b.Amount0)
 	res1 := new(big.Int).Sub(a.Amount1, b.Amount1)
 

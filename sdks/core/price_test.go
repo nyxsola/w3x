@@ -1,4 +1,4 @@
-package libraries
+package sdkcore
 
 import (
 	"math/big"
@@ -7,16 +7,15 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-
-func newETH() ICurrency {
+func newETH() *Currency {
 	return NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef13"), 18, "ETH", "ETH Token")
 }
 
-func newUSDC() ICurrency {
-	return NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "USDC", "USDC Token",)
+func newUSDC() *Currency {
+	return NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef12"), 6, "USDC", "USDC Token")
 }
 
-func newDAI() ICurrency {
+func newDAI() *Currency {
 	return NewCurrency(1, common.HexToAddress("0xABCDEF1234567890abcdef1234567890abcdef11"), 18, "DAI", "DAI Token")
 }
 
@@ -164,7 +163,7 @@ func TestPriceAdjustedForDecimals(t *testing.T) {
 	// Scalar = 10^18 / 10^6 = 10^12
 
 	expected18 := new(big.Int).Exp(big.NewInt(10), big.NewInt(18), nil)
-	
+
 	if adj.Numerator.Cmp(expected18) != 0 {
 		t.Fatalf("adjustedForDecimals Numerator incorrect, got %s", adj.Numerator.String())
 	}
@@ -192,5 +191,4 @@ func TestPriceFormatting(t *testing.T) {
 		t.Fatal("ToSignificant returned incorrect")
 	}
 
-	
 }

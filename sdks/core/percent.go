@@ -1,4 +1,4 @@
-package libraries
+package sdkcore
 
 import "math/big"
 
@@ -16,9 +16,9 @@ type Percent struct {
 // toPercent converts a Fraction to a Percent.
 //
 // Example:
-//   f := NewFraction(big.NewInt(1), big.NewInt(2)) // 1/2
-//   p := toPercent(f) // 50%
 //
+//	f := NewFraction(big.NewInt(1), big.NewInt(2)) // 1/2
+//	p := toPercent(f) // 50%
 func toPercent(fraction *Fraction) *Percent {
 	return NewPercent(fraction.Numerator, fraction.Denominator)
 }
@@ -26,8 +26,8 @@ func toPercent(fraction *Fraction) *Percent {
 // NewPercent creates a new Percent from a numerator and denominator.
 //
 // Example:
-//   p := NewPercent(big.NewInt(3), big.NewInt(4)) // 75%
 //
+//	p := NewPercent(big.NewInt(3), big.NewInt(4)) // 75%
 func NewPercent(numerator, denominator *big.Int) *Percent {
 	return &Percent{NewFraction(numerator, denominator)}
 }
@@ -35,10 +35,10 @@ func NewPercent(numerator, denominator *big.Int) *Percent {
 // Add returns a new Percent representing the sum of p and other.
 //
 // Example:
-//   p1 := NewPercent(big.NewInt(25), big.NewInt(1)) // 25%
-//   p2 := NewPercent(big.NewInt(30), big.NewInt(1)) // 30%
-//   sum := p1.Add(p2) // 55%
 //
+//	p1 := NewPercent(big.NewInt(25), big.NewInt(1)) // 25%
+//	p2 := NewPercent(big.NewInt(30), big.NewInt(1)) // 30%
+//	sum := p1.Add(p2) // 55%
 func (p *Percent) Add(other *Percent) *Percent {
 	return toPercent(p.Fraction.Add(other.Fraction))
 }
@@ -46,10 +46,10 @@ func (p *Percent) Add(other *Percent) *Percent {
 // Subtract returns a new Percent representing the difference of p and other.
 //
 // Example:
-//   p1 := NewPercent(big.NewInt(60), big.NewInt(1)) // 60%
-//   p2 := NewPercent(big.NewInt(20), big.NewInt(1)) // 20%
-//   diff := p1.Subtract(p2) // 40%
 //
+//	p1 := NewPercent(big.NewInt(60), big.NewInt(1)) // 60%
+//	p2 := NewPercent(big.NewInt(20), big.NewInt(1)) // 20%
+//	diff := p1.Subtract(p2) // 40%
 func (p *Percent) Subtract(other *Percent) *Percent {
 	return toPercent(p.Fraction.Subtract(other.Fraction))
 }
@@ -57,10 +57,10 @@ func (p *Percent) Subtract(other *Percent) *Percent {
 // Multiply returns a new Percent representing the product of p and other.
 //
 // Example:
-//   p1 := NewPercent(big.NewInt(50), big.NewInt(1)) // 50%
-//   p2 := NewPercent(big.NewInt(50), big.NewInt(1)) // 50%
-//   product := p1.Multiply(p2) // 25%
 //
+//	p1 := NewPercent(big.NewInt(50), big.NewInt(1)) // 50%
+//	p2 := NewPercent(big.NewInt(50), big.NewInt(1)) // 50%
+//	product := p1.Multiply(p2) // 25%
 func (p *Percent) Multiply(other *Percent) *Percent {
 	return toPercent(p.Fraction.Multiply(other.Fraction))
 }
@@ -68,10 +68,10 @@ func (p *Percent) Multiply(other *Percent) *Percent {
 // Divide returns a new Percent representing p divided by other.
 //
 // Example:
-//   p1 := NewPercent(big.NewInt(50), big.NewInt(1)) // 50%
-//   p2 := NewPercent(big.NewInt(25), big.NewInt(1)) // 25%
-//   quotient := p1.Divide(p2) // 200%
 //
+//	p1 := NewPercent(big.NewInt(50), big.NewInt(1)) // 50%
+//	p2 := NewPercent(big.NewInt(25), big.NewInt(1)) // 25%
+//	quotient := p1.Divide(p2) // 200%
 func (p *Percent) Divide(other *Percent) *Percent {
 	return toPercent(p.Fraction.Divide(other.Fraction))
 }
@@ -80,9 +80,9 @@ func (p *Percent) Divide(other *Percent) *Percent {
 // number of significant digits.
 //
 // Example:
-//   p := NewPercent(big.NewInt(1), big.NewInt(2)) // 50%
-//   fmt.Println(p.ToSignificant(2)) // "50"
 //
+//	p := NewPercent(big.NewInt(1), big.NewInt(2)) // 50%
+//	fmt.Println(p.ToSignificant(2)) // "50"
 func (p *Percent) ToSignificant(significantDigits int32) string {
 	return p.Fraction.Multiply(OneHundred).ToSignificant(significantDigits)
 }
@@ -91,9 +91,9 @@ func (p *Percent) ToSignificant(significantDigits int32) string {
 // decimal places.
 //
 // Example:
-//   p := NewPercent(big.NewInt(1), big.NewInt(3)) // ~33.33%
-//   fmt.Println(p.ToFixed(2)) // "33.33"
 //
+//	p := NewPercent(big.NewInt(1), big.NewInt(3)) // ~33.33%
+//	fmt.Println(p.ToFixed(2)) // "33.33"
 func (p *Percent) ToFixed(decimalPlaces int32) string {
 	return p.Fraction.Multiply(OneHundred).ToFixed(decimalPlaces)
 }

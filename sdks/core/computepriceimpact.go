@@ -1,4 +1,4 @@
-package libraries
+package sdkcore
 
 /**
  * ComputePriceImpact calculates the **price impact** of a trade relative to the mid price.

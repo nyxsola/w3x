@@ -4,8 +4,9 @@ import "github.com/pkg/errors"
 
 // ProtocolFee represents a packed protocol fee for zero-for-one and one-for-zero swaps.
 // It's a uint24 value with layout:
-//   bits 0-11   -> zero-for-one fee (0..4095, max 1000 allowed)
-//   bits 12-23  -> one-for-zero fee (0..4095, max 1000 allowed)
+//
+//	bits 0-11   -> zero-for-one fee (0..4095, max 1000 allowed)
+//	bits 12-23  -> one-for-zero fee (0..4095, max 1000 allowed)
 type ProtocolFee uint32
 
 const (
@@ -20,8 +21,8 @@ const (
 	PipsDenominator uint32 = 1_000_000
 
 	// Masks
-	zeroForOneMask uint32 = 0xfff      // lower 12 bits
-	oneForZeroMask uint32 = 0xfff000   // upper 12 bits
+	zeroForOneMask uint32 = 0xfff    // lower 12 bits
+	oneForZeroMask uint32 = 0xfff000 // upper 12 bits
 )
 
 var (
@@ -61,7 +62,7 @@ func (f ProtocolFee) IsValid() bool {
 // swapFee = protocolFee + lpFee - floor(protocolFee * lpFee / 1_000_000)
 func CalculateSwapFee(protocolFee uint16, lpFee LPFee) uint32 {
 	protocolFeeMasked := uint32(protocolFee & 0xfff) // only lower 12 bits
-	lpFeeMasked := lpFee.Value() & 0xffffff                   // uint24 mask
+	lpFeeMasked := lpFee.Value() & 0xffffff          // uint24 mask
 
 	numerator := protocolFeeMasked * lpFeeMasked
 	return protocolFeeMasked + lpFeeMasked - (numerator / PipsDenominator)

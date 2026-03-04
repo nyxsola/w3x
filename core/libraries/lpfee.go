@@ -84,9 +84,9 @@ func (f LPFee) RemoveOverride() LPFee {
 
 func (f LPFee) RemoveOverrideFlagAndValidate() (LPFee, error) {
 	fee := f.RemoveOverride()
-	if err := fee.Validate(); err != nil { 
-		return 0, err 
-	} 
+	if err := fee.Validate(); err != nil {
+		return 0, err
+	}
 	return fee, nil
 }
 

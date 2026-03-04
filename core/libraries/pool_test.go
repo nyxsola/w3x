@@ -14,7 +14,7 @@ func TestInitialize(t *testing.T) {
 	p := NewPool()
 
 	price, _ := utils.GetSqrtPriceAtTick(0)
-	
+
 	tick, err := p.Initialize(price, LPFee(3000))
 	assert.NoError(t, err)
 	assert.Equal(t, 0, tick)
@@ -112,7 +112,6 @@ func TestPool_CrossTick_Basic(t *testing.T) {
 	info.FeeGrowthOutside0X128 = new(big.Int).Set(initialOutside0)
 	info.FeeGrowthOutside1X128 = new(big.Int).Set(initialOutside1)
 	info.LiquidityNet = big.NewInt(500)
-	
 
 	feeGlobal0 := big.NewInt(5000)
 	feeGlobal1 := big.NewInt(8000)
@@ -154,11 +153,11 @@ func TestModifyLiquidity_InRange(t *testing.T) {
 	_, _ = p.Initialize(price, LPFee(3000))
 
 	params := ModifyLiquidityParams{
-		Owner:         common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
-		TickLower:     -60,
-		TickUpper:     60,
+		Owner:          common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
+		TickLower:      -60,
+		TickUpper:      60,
 		LiquidityDelta: big.NewInt(1_000_000),
-		TickSpacing:   60,
+		TickSpacing:    60,
 	}
 
 	delta, feeDelta, err := p.ModifyLiquidity(params)
@@ -175,17 +174,17 @@ func TestModifyLiquidity_OutOfRange1(t *testing.T) {
 
 	price, _ := utils.GetSqrtPriceAtTick(-70)
 	_, _ = p.Initialize(price, LPFee(3000))
-	
+
 	params := ModifyLiquidityParams{
-		Owner:         common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
-		TickLower:     -60,
-		TickUpper:     60,
+		Owner:          common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
+		TickLower:      -60,
+		TickUpper:      60,
 		LiquidityDelta: big.NewInt(1_000_000),
-		TickSpacing:   60,
+		TickSpacing:    60,
 	}
 
 	delta, feeDelta, err := p.ModifyLiquidity(params)
-	
+
 	assert.NoError(t, err)
 	assert.NotNil(t, delta)
 	assert.NotNil(t, feeDelta)
@@ -198,17 +197,17 @@ func TestModifyLiquidity_OutOfRange2(t *testing.T) {
 
 	price, _ := utils.GetSqrtPriceAtTick(70)
 	_, _ = p.Initialize(price, LPFee(3000))
-	
+
 	params := ModifyLiquidityParams{
-		Owner:         common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
-		TickLower:     -60,
-		TickUpper:     60,
+		Owner:          common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
+		TickLower:      -60,
+		TickUpper:      60,
 		LiquidityDelta: big.NewInt(1_000_000),
-		TickSpacing:   60,
+		TickSpacing:    60,
 	}
 
 	delta, feeDelta, err := p.ModifyLiquidity(params)
-	
+
 	assert.NoError(t, err)
 	assert.NotNil(t, delta)
 	assert.NotNil(t, feeDelta)
@@ -223,11 +222,11 @@ func TestModifyLiquidity_Remove(t *testing.T) {
 	_, _ = p.Initialize(price, LPFee(3000))
 
 	params := ModifyLiquidityParams{
-		Owner:         common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
-		TickLower:     -60,
-		TickUpper:     60,
+		Owner:          common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
+		TickLower:      -60,
+		TickUpper:      60,
 		LiquidityDelta: big.NewInt(1_000_000),
-		TickSpacing:   60,
+		TickSpacing:    60,
 	}
 
 	_, _, _ = p.ModifyLiquidity(params)
@@ -246,24 +245,24 @@ func TestDonate_WithLiquidity(t *testing.T) {
 	_, _ = p.Initialize(price, LPFee(3000))
 
 	params := ModifyLiquidityParams{
-		Owner:         common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
-		TickLower:     -60,
-		TickUpper:     60,
+		Owner:          common.HexToAddress("0x0123456789abcdef0123456789abcdef01234567"),
+		TickLower:      -60,
+		TickUpper:      60,
 		LiquidityDelta: big.NewInt(1_000_000),
-		TickSpacing:   60,
+		TickSpacing:    60,
 	}
 
 	_, _, _ = p.ModifyLiquidity(params)
-	
+
 	_, err := p.Donate(big.NewInt(1000), big.NewInt(1000))
 	assert.NoError(t, err)
-	
+
 	assert.True(t, p.feeGrowthGlobal0X128.Sign() > 0)
 }
 
 func TestSwapVariousScenarios(t *testing.T) {
 	p := NewPool()
-	
+
 	price, _ := utils.GetSqrtPriceAtTick(300)
 	_, _ = p.Initialize(price, LPFee(3000))
 	pfee, _ := NewProtocolFee(10, 10)
@@ -277,13 +276,13 @@ func TestSwapVariousScenarios(t *testing.T) {
 	})
 	fmt.Println("delta", delta)
 	tests := []struct {
-		name             string
-		zeroForOne       bool
-		amountSpecified  int64
-		percentOffset int64
+		name            string
+		zeroForOne      bool
+		amountSpecified int64
+		percentOffset   int64
 	}{
-		{"ZeroForOne_exactIn_small", true, -10000, -1}, 
-		{"ZeroForOne_exactOut_small", true, 10000, -1}, 
+		{"ZeroForOne_exactIn_small", true, -10000, -1},
+		{"ZeroForOne_exactOut_small", true, 10000, -1},
 		{"OneForZero_exactIn_small", false, -10000, 1},
 		{"OneForZero_exactOut_small", false, 10000, 1},
 	}

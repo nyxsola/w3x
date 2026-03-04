@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	ErrInvariant      = errors.New("price invariant violation")
-	ErrZeroLiquidity = errors.New("liquidity is zero")
+	ErrInvariant             = errors.New("price invariant violation")
+	ErrZeroLiquidity         = errors.New("liquidity is zero")
 	ErrSqrtPriceLessThanZero = errors.New("sqrt price is less than zero")
 	ErrLiquidityLessThanZero = errors.New("liquidity is less than zero")
 )
@@ -20,7 +20,8 @@ var (
 // price ratio in a compact high-precision format suitable for tick calculations.
 //
 // Formula:
-//     sqrtPriceX96 = sqrt(amount1 / amount0) * 2^96
+//
+//	sqrtPriceX96 = sqrt(amount1 / amount0) * 2^96
 //
 // Parameters:
 //   - amount1: numerator amount (token1, in smallest unit, e.g., wei)
@@ -50,7 +51,8 @@ func SqrtPriceX96(amount1, amount0 *big.Int) (*big.Int, error) {
 // liquidity between two sqrt price ratios, using big.Int arithmetic.
 //
 // This is equivalent to the Uniswap v4 formula:
-//     amount0 = L * (sqrtPriceB - sqrtPriceA) / (sqrtPriceB * sqrtPriceA)
+//
+//	amount0 = L * (sqrtPriceB - sqrtPriceA) / (sqrtPriceB * sqrtPriceA)
 //
 // Parameters:
 //   - sqrtPriceAX96: lower sqrt price as Q64.96
@@ -79,7 +81,7 @@ func GetAmount0Delta(sqrtPriceAX96, sqrtPriceBX96, liquidity *big.Int, roundUp b
 		if err != nil {
 			return nil, err
 		}
-		
+
 		// ceil( temp / sqrtA )
 		result, err := MulDivRoundingUp(temp, big.NewInt(1), sqrtPriceAX96)
 		if err != nil {
@@ -104,7 +106,8 @@ func GetAmount0Delta(sqrtPriceAX96, sqrtPriceBX96, liquidity *big.Int, roundUp b
 // liquidity between two sqrt price ratios, using big.Int arithmetic.
 //
 // This is equivalent to the Uniswap v4 formula:
-//     amount1 = L * (sqrtPriceB - sqrtPriceA) / 2^96
+//
+//	amount1 = L * (sqrtPriceB - sqrtPriceA) / 2^96
 //
 // Parameters:
 //   - sqrtPriceAX96: lower sqrt price as Q64.96
@@ -144,8 +147,9 @@ func GetAmount1Delta(sqrtPriceAX96, sqrtPriceBX96, liquidity *big.Int, roundUp b
 // (Q64.96) given a change in token1 amount.
 //
 // This is equivalent to the Uniswap v4 formula:
-// 	add: sqrtPriceNext = sqrtPriceX96 + (amount1 / liquidity)
-// 	remove: sqrtPriceNext = sqrtPriceX96 - (amount1 / liquidity)
+//
+//	add: sqrtPriceNext = sqrtPriceX96 + (amount1 / liquidity)
+//	remove: sqrtPriceNext = sqrtPriceX96 - (amount1 / liquidity)
 //
 // Parameters:
 //   - sqrtPriceX96: current sqrt price in Q64.96
@@ -187,8 +191,9 @@ func GetNextSqrtPriceFromAmount1RoundingDown(sqrtPriceX96, liquidity, amount *bi
 // after adding or removing a given amount of token0, using big.Int arithmetic.
 //
 // This implements the Uniswap v4 formula for token0:
-//   add: sqrtPriceNext = (L * sqrtPriceX96) / (L + (amount0 * sqrtPriceX96))
-//   remove: sqrtPriceNext = (L * sqrtPriceX96) / (L - (amount0 * sqrtPriceX96))
+//
+//	add: sqrtPriceNext = (L * sqrtPriceX96) / (L + (amount0 * sqrtPriceX96))
+//	remove: sqrtPriceNext = (L * sqrtPriceX96) / (L - (amount0 * sqrtPriceX96))
 //
 // - Adding token0 (add=true) decreases the sqrt price.
 // - Removing token0 (add=false) increases the sqrt price.

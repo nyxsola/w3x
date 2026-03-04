@@ -45,9 +45,9 @@ type PoolManager struct {
 // NewPoolManager creates a new PoolManager instance.
 func NewPoolManager() *PoolManager {
 	return &PoolManager{
-		pools:                 make(map[libraries.PoolId]*libraries.Pool),
-		currencyDelta:         libraries.NewCurrencyDelta(),
-		protocolFeesAccrueds:  make(map[common.Address]*big.Int),
+		pools:                make(map[libraries.PoolId]*libraries.Pool),
+		currencyDelta:        libraries.NewCurrencyDelta(),
+		protocolFeesAccrueds: make(map[common.Address]*big.Int),
 	}
 }
 
@@ -58,9 +58,9 @@ func NewPoolManager() *PoolManager {
 // - sqrtPriceX96: initial square root price of the pool, Q64.96 fixed-point.
 //
 // Returns:
-// - int: the initialized tick corresponding to sqrtPriceX96.
-// - error: any error encountered during initialization, including invalid tick spacing,
-//          currencies out of order, or pool already existing.
+//   - int: the initialized tick corresponding to sqrtPriceX96.
+//   - error: any error encountered during initialization, including invalid tick spacing,
+//     currencies out of order, or pool already existing.
 //
 // Errors:
 // - ErrTickSpacingTooLarge if key.TickSpacing > utils.MaxTickSpacing.
@@ -137,9 +137,9 @@ func (pm *PoolManager) SetProcolFee(key libraries.PoolKey, newProtocolFee librar
 // ModifyLiquidity adds or removes liquidity for a position owner.
 //
 // This function:
-//   1. Updates position liquidity
-//   2. Collects any accrued fees
-//   3. Accounts net balance delta to the owner
+//  1. Updates position liquidity
+//  2. Collects any accrued fees
+//  3. Accounts net balance delta to the owner
 //
 // Returns:
 //   - ownerDelta: net token balance change (principal + fees)
@@ -147,8 +147,9 @@ func (pm *PoolManager) SetProcolFee(key libraries.PoolKey, newProtocolFee librar
 //   - error if pool not initialized or liquidity update fails
 //
 // Accounting Model:
-//   ownerDelta = principalDelta + feesAccrued
-//   and is recorded via accountPoolBalanceDelta()
+//
+//	ownerDelta = principalDelta + feesAccrued
+//	and is recorded via accountPoolBalanceDelta()
 //
 // This mirrors Uniswap v4's modifyLiquidity behavior.
 func (pm *PoolManager) ModifyLiquidity(key libraries.PoolKey, params types.ModifyLiquidityParams, owner common.Address,
@@ -175,7 +176,7 @@ func (pm *PoolManager) ModifyLiquidity(key libraries.PoolKey, params types.Modif
 	if err != nil {
 		return libraries.ZeroBalanceDelta, libraries.ZeroBalanceDelta, err
 	}
-	
+
 	ownerDelta = principalDelta.Add(feesAccrued)
 
 	pm.accountPoolBalanceDelta(key, ownerDelta, owner)
@@ -202,10 +203,11 @@ func (pm *PoolManager) ModifyLiquidity(key libraries.PoolKey, params types.Modif
 //   - error if swap fails
 //
 // Note:
-//   Protocol fee is always charged on input token.
+//
+//	Protocol fee is always charged on input token.
 func (pm *PoolManager) Swap(key libraries.PoolKey, params types.SwapParams, owner common.Address,
 ) (libraries.BalanceDelta, error) {
-	
+
 	if params.AmountSpecified.Sign() == 0 {
 		return libraries.ZeroBalanceDelta, ErrSwapAmountCannotBeZero
 	}
@@ -267,12 +269,12 @@ func (pm *PoolManager) Donate(key libraries.PoolKey, amount0, amount1 *big.Int, 
 	if !ok {
 		return ErrPoolNotInitialized
 	}
-	
+
 	if err := pool.CheckPoolInitialized(); err != nil {
 		return err
 	}
 
-	delta, err := pool.Donate(amount0, amount1);
+	delta, err := pool.Donate(amount0, amount1)
 	if err != nil {
 		return err
 	}
@@ -311,7 +313,7 @@ func (pm *PoolManager) swap(pool *libraries.Pool, params libraries.SwapParams, i
 	if err != nil {
 		return libraries.ZeroBalanceDelta, err
 	}
-	
+
 	if amountToProtocol.Sign() > 0 {
 		pm.updateProtocolFees(inputCurrency, amountToProtocol)
 	}

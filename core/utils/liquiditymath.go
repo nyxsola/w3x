@@ -7,16 +7,19 @@ import (
 // AddDelta applies a signed delta `y` to value `x` and returns the result.
 //
 // If y >= 0:
-//     result = x + y
+//
+//	result = x + y
 //
 // If y < 0:
-//     result = x - |y|
+//
+//	result = x - |y|
 //
 // This function does NOT mutate x or y.
 // A new big.Int instance is always returned.
 //
 // Equivalent to Solidity pattern:
-//     x = x + int256(delta)
+//
+//	x = x + int256(delta)
 //
 // Commonly used in liquidity or balance adjustments where
 // delta may be positive or negative.

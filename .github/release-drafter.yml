@@ -1,16 +1,17 @@
-name-template: "${{ github.ref_name }}"
+# release-drafter.yml
+name-template: "$NAME ($DATE)"
 tag-template: "${{ github.ref_name }}"
 
 categories:
+  - title: "Features"
+    labels:
+      - "feature"
+      - "feat"
   - title: "Bug Fixes"
     labels:
       - "bug"
       - "fix"
       - "compat"
-  - title: "Features"
-    labels:
-      - "feature"
-      - "feat"
   - title: "Performance Improvements"
     labels:
       - "perf"
@@ -31,7 +32,11 @@ categories:
       - "ci"
 
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+
 template: |
   ## $NAME ($DATE)
 
   $CHANGES
+
+  ### Contributors
+  $CONTRIBUTORS

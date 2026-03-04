@@ -1,4 +1,4 @@
-package libraries
+package sdkcore
 
 import (
 	"math/big"
@@ -21,12 +21,12 @@ var (
 //
 // Conceptually:
 //
-//   Price = Token1 / Token0
+//	Price = Token1 / Token0
 //
 // Internally, Price embeds a Fraction where:
 //
-//   Numerator   = amount of Token1
-//   Denominator = amount of Token0
+//	Numerator   = amount of Token1
+//	Denominator = amount of Token0
 //
 // IMPORTANT:
 //
@@ -39,8 +39,8 @@ var (
 //
 // Mathematical definition:
 //
-//   rawPrice        = numerator / denominator
-//   adjustedPrice   = rawPrice × 10^(decimals(Token0)) / 10^(decimals(Token1))
+//	rawPrice        = numerator / denominator
+//	adjustedPrice   = rawPrice × 10^(decimals(Token0)) / 10^(decimals(Token1))
 //
 // This mirrors how price scaling works in AMM protocols such as Uniswap.
 //
@@ -50,11 +50,11 @@ type Price struct {
 
 	// Token0 is the base currency (input).
 	// This corresponds to the denominator of the price fraction.
-	Token0 ICurrency
+	Token0 *Currency
 
 	// Token1 is the quote currency (output).
 	// This corresponds to the numerator of the price fraction.
-	Token1 ICurrency
+	Token1 *Currency
 
 	// Scalar is a precomputed scaling factor used to adjust the raw
 	// fraction according to token decimals for display purposes.
@@ -73,13 +73,13 @@ type Price struct {
 //
 // The resulting Price represents:
 //
-//   numerator / denominator
+//	numerator / denominator
 //
 // The Scalar is automatically computed from token decimals.
 //
 // This constructor does NOT normalize or reduce precision beyond
 // Fraction behavior.
-func NewPrice(token0, token1 ICurrency, denominator, numerator *big.Int) *Price {
+func NewPrice(token0, token1 *Currency, denominator, numerator *big.Int) *Price {
 	return &Price{
 		Fraction: NewFraction(numerator, denominator),
 		Token0:   token0,
@@ -95,7 +95,7 @@ func NewPrice(token0, token1 ICurrency, denominator, numerator *big.Int) *Price 
 //
 // Mathematically:
 //
-//   (Token1 / Token0)^-1 = Token0 / Token1
+//	(Token1 / Token0)^-1 = Token0 / Token1
 //
 // The base and quote currencies are swapped accordingly.
 //
@@ -108,11 +108,11 @@ func (p *Price) Invert() *Price {
 //
 // Currency constraint:
 //
-//   other.Token0 must equal p.Token1
+//	other.Token0 must equal p.Token1
 //
 // Meaning:
 //
-//   (A/B) × (B/C) = A/C
+//	(A/B) × (B/C) = A/C
 //
 // If currencies do not align, ErrDifferentCurrencies is returned.
 //
@@ -130,11 +130,11 @@ func (p *Price) Multiply(other *Price) (*Price, error) {
 //
 // Equivalent to:
 //
-//   amountOut = price × amountIn
+//	amountOut = price × amountIn
 //
 // Currency constraint:
 //
-//   currencyAmount.Currency must equal p.Token0
+//	currencyAmount.Currency must equal p.Token0
 //
 // Returns ErrDifferentCurrencies if mismatched.
 //

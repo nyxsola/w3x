@@ -51,6 +51,8 @@ jobs:
       # Update Release Draft with Release Drafter
       - name: Update Release Draft
         uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: ${{ github.ref_name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          config-name: release-drafter.yml

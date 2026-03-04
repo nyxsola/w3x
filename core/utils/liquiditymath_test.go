@@ -18,7 +18,7 @@ func TestAddDelta(t *testing.T) {
 		{"negative + negative", "-10", "-5", "-15"},
 		{"zero + positive", "0", "8", "8"},
 		{"zero + negative", "0", "-8", "-8"},
-		{"large numbers", 
+		{"large numbers",
 			"340282366920938463463374607431768211455", // 2^128-1
 			"1",
 			"340282366920938463463374607431768211456",

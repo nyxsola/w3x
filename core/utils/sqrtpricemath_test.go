@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-
 func TestSqrtPriceX96(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -18,7 +17,7 @@ func TestSqrtPriceX96(t *testing.T) {
 	}{
 		{
 			name:    "normal values",
-			amount1: big.NewInt(2000_000_000), // e.g., 2000 USDC (6 decimals)
+			amount1: big.NewInt(2000_000_000),              // e.g., 2000 USDC (6 decimals)
 			amount0: big.NewInt(1_000_000_000_000_000_000), // 1 ETH in wei
 			wantGT:  0,
 		},
@@ -177,10 +176,10 @@ func TestGetNextSqrtPriceFromInput(t *testing.T) {
 	sqrtPriceX96 := new(big.Int).Set(Q96)
 
 	tests := []struct {
-		name        string
-		amountIn    *big.Int
-		zeroForOne  bool
-		wantErr     bool
+		name       string
+		amountIn   *big.Int
+		zeroForOne bool
+		wantErr    bool
 	}{
 		{"token0->token1 small", big.NewInt(10), true, false},
 		{"token1->token0 small", big.NewInt(10), false, false},
@@ -197,11 +196,11 @@ func TestGetNextSqrtPriceFromInput(t *testing.T) {
 			if err != nil {
 				return
 			}
-			
+
 			if tt.amountIn.Sign() == 0 && nextPrice.Cmp(sqrtPriceX96) != 0 {
 				t.Errorf("amount=0: expected nextPrice == currentPrice")
 			}
-			
+
 			if tt.zeroForOne && tt.amountIn.Sign() > 0 && nextPrice.Cmp(sqrtPriceX96) >= 0 {
 				t.Errorf("token0->token1: expected nextPrice < currentPrice")
 			}
@@ -217,10 +216,10 @@ func TestGetNextSqrtPriceFromOutput(t *testing.T) {
 	sqrtPriceX96 := new(big.Int).Set(Q96)
 
 	tests := []struct {
-		name        string
-		amountOut   *big.Int
-		zeroForOne  bool
-		wantErr     bool
+		name       string
+		amountOut  *big.Int
+		zeroForOne bool
+		wantErr    bool
 	}{
 		{"token0->token1 small", big.NewInt(10), true, false},
 		{"token1->token0 small", big.NewInt(10), false, false},
@@ -238,7 +237,7 @@ func TestGetNextSqrtPriceFromOutput(t *testing.T) {
 			if err != nil {
 				return
 			}
-			
+
 			if tt.amountOut.Sign() == 0 && nextPrice.Cmp(sqrtPriceX96) != 0 {
 				t.Errorf("amount=0: expected nextPrice == currentPrice")
 			}

@@ -32,7 +32,7 @@ func TestInitialize_Success(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	
+
 	if tick != 0 {
 		t.Fatalf("expected zero tick after initialization")
 	}
@@ -130,7 +130,7 @@ func TestModifyLiquidity_NotInitialized(t *testing.T) {
 
 func TestPoolManager_SwapIntegration(t *testing.T) {
 	pm := NewPoolManager()
-	
+
 	owner := common.HexToAddress("0x00000000000000000000000000000000000000aa")
 
 	key := libraries.PoolKey{
@@ -175,7 +175,7 @@ func TestPoolManager_SwapIntegration(t *testing.T) {
 	fmt.Println("userDelta", userDelta0, userDelta1)
 
 	swapAmount := big.NewInt(-1000)
-	
+
 	delta, err := pm.Swap(
 		key,
 		types.SwapParams{
@@ -188,7 +188,7 @@ func TestPoolManager_SwapIntegration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("swap failed: %v", err)
 	}
-	
+
 	if delta.Amount0.Sign() == 0 && delta.Amount1.Sign() == 0 {
 		t.Fatalf("swap delta should not be zero")
 	}

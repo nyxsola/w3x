@@ -41,19 +41,19 @@ var (
 //
 // SqrtPriceX96 uses Q64.96 fixed-point format.
 type Slot0 struct {
-    SqrtPriceX96 *big.Int
-    Tick         int
-    ProtocolFee  ProtocolFee
-    LPFee        LPFee
+	SqrtPriceX96 *big.Int
+	Tick         int
+	ProtocolFee  ProtocolFee
+	LPFee        LPFee
 }
 
 // Pool implements the concentrated liquidity AMM state machine.
 //
 // It maintains:
 //
-//   1. Global fee accumulators (monotonic increasing)
-//   2. Active in-range liquidity
-//   3. Tick boundary fee accounting
+//  1. Global fee accumulators (monotonic increasing)
+//  2. Active in-range liquidity
+//  3. Tick boundary fee accounting
 //
 // Financial invariants:
 //
@@ -82,12 +82,12 @@ type Pool struct {
 
 // NewPool creates an uninitialized pool instance.
 func NewPool() *Pool {
-	return &Pool {
+	return &Pool{
 		feeGrowthGlobal0X128: big.NewInt(0),
 		feeGrowthGlobal1X128: big.NewInt(0),
-		liquidity: big.NewInt(0),
-		tickManager: NewTickManager(),
-		positionManager: NewPositionManager(),
+		liquidity:            big.NewInt(0),
+		tickManager:          NewTickManager(),
+		positionManager:      NewPositionManager(),
 	}
 }
 
@@ -151,16 +151,17 @@ func (p *Pool) ClearTick(tick int) {
 // GetFeeGrowthInside computes cumulative fee growth inside [tickLower, tickUpper).
 //
 // Tick axis:
-// 
+//
 // 0    tickLower        tickUpper     MaxTick
 // |-------|-----------------|-------------|
-//    10           20              70
 //
-// | tickCurrent position                 | formula                                         | conceptual result            
-// | ------------------------------------ | ----------------------------------------------- | ------------------------- 
-// | tickCurrent < tickLower              | lower.FeeGrowthOutside - upper.FeeGrowthOutside | 10 - 70 → negative (not started)   
-// | tickLower <= tickCurrent < tickUpper | feeGrowthGlobal - lower - upper                 | 100 - 10 - 70 = 20 (internal accrual) 
-// | tickCurrent >= tickUpper             | upper - lower                                   | 70 - 10 = 60 (fully accrued)   
+//	10           20              70
+//
+// | tickCurrent position                 | formula                                         | conceptual result
+// | ------------------------------------ | ----------------------------------------------- | -------------------------
+// | tickCurrent < tickLower              | lower.FeeGrowthOutside - upper.FeeGrowthOutside | 10 - 70 → negative (not started)
+// | tickLower <= tickCurrent < tickUpper | feeGrowthGlobal - lower - upper                 | 100 - 10 - 70 = 20 (internal accrual)
+// | tickCurrent >= tickUpper             | upper - lower                                   | 70 - 10 = 60 (fully accrued)
 func (p *Pool) GetFeeGrowthInside(tickLower, tickUpper int) (feeGrowthInside0X128, feeGrowthInside1X128 *big.Int) {
 	lower := p.tickManager.Get(tickLower)
 	upper := p.tickManager.Get(tickUpper)
@@ -190,20 +191,20 @@ func (p *Pool) GetFeeGrowthInside(tickLower, tickUpper int) (feeGrowthInside0X12
 //
 // Transformation:
 //
-//   Fo(T) = G - Fo(T)
+//	Fo(T) = G - Fo(T)
 //
 // This flips fee accounting perspective when
 // price crosses the boundary.
 //
 // Returns liquidityNet to apply to active liquidity.
 func (p *Pool) CrossTick(tick int, feeGrowthGlobal0X128, feeGrowthGlobal1X128 *big.Int) *big.Int {
-    currentTick := p.tickManager.Get(tick)
+	currentTick := p.tickManager.Get(tick)
 
-    // feeGrowthOutside := feeGrowthGlobal - feeGrowthOutside
-    currentTick.FeeGrowthOutside0X128 = new(big.Int).Sub(feeGrowthGlobal0X128, currentTick.FeeGrowthOutside0X128)
-    currentTick.FeeGrowthOutside1X128 = new(big.Int).Sub(feeGrowthGlobal1X128, currentTick.FeeGrowthOutside1X128)
+	// feeGrowthOutside := feeGrowthGlobal - feeGrowthOutside
+	currentTick.FeeGrowthOutside0X128 = new(big.Int).Sub(feeGrowthGlobal0X128, currentTick.FeeGrowthOutside0X128)
+	currentTick.FeeGrowthOutside1X128 = new(big.Int).Sub(feeGrowthGlobal1X128, currentTick.FeeGrowthOutside1X128)
 
-    return currentTick.LiquidityNet
+	return currentTick.LiquidityNet
 }
 
 // UpdateTick mutates liquidity state at a boundary.
@@ -216,8 +217,9 @@ func (p *Pool) CrossTick(tick int, feeGrowthGlobal0X128, feeGrowthGlobal1X128 *b
 // 4. Update liquidityNet
 //
 // liquidityNet semantics:
-//   When crossing upward:
-//       liquidity += liquidityNet
+//
+//	When crossing upward:
+//	    liquidity += liquidityNet
 func (p *Pool) UpdateTick(tick int, liquidityDelta *big.Int, upper bool) (flipped bool, liquidityGrossAfter *big.Int) {
 	tickInfo := p.tickManager.Get(tick)
 
@@ -246,7 +248,7 @@ func (p *Pool) UpdateTick(tick int, liquidityDelta *big.Int, upper bool) (flippe
 //
 // Formula:
 //
-//   feeGrowthGlobal += (amount * Q128) / liquidity
+//	feeGrowthGlobal += (amount * Q128) / liquidity
 //
 // Properties:
 //
@@ -280,19 +282,19 @@ func (p *Pool) Donate(amount0, amount1 *big.Int) (BalanceDelta, error) {
 
 // ModifyLiquidityParams defines position mutation input.
 type ModifyLiquidityParams struct {
-	Owner         common.Address
-	TickLower     int  
-	TickUpper     int   
-	LiquidityDelta *big.Int 
-	TickSpacing   int   
-	Salt          [32]byte
+	Owner          common.Address
+	TickLower      int
+	TickUpper      int
+	LiquidityDelta *big.Int
+	TickSpacing    int
+	Salt           [32]byte
 }
 
 // ModifyLiquidityState captures tick mutation results.
 type ModifyLiquidityState struct {
-	FlippedLower           bool   
-	LiquidityGrossAfterLower *big.Int 
-	FlippedUpper           bool   
+	FlippedLower             bool
+	LiquidityGrossAfterLower *big.Int
+	FlippedUpper             bool
 	LiquidityGrossAfterUpper *big.Int
 }
 
@@ -301,24 +303,24 @@ type ModifyLiquidityState struct {
 // This function mirrors the core behavior of Uniswap V4 `modifyPosition` logic.
 // It handles:
 //
-//   1. Tick state mutation (liquidity gross / net update)
-//   2. Tick bitmap flipping
-//   3. Position fee growth accounting
-//   4. Token amount delta calculation
-//   5. Pool active liquidity update (if position is in-range)
+//  1. Tick state mutation (liquidity gross / net update)
+//  2. Tick bitmap flipping
+//  3. Position fee growth accounting
+//  4. Token amount delta calculation
+//  5. Pool active liquidity update (if position is in-range)
 //
 // -----------------------------------------------------------------------------
 // liquidityDelta semantics:
 //
-//   > 0  → add liquidity (user deposits tokens)
-//   < 0  → remove liquidity (user withdraws tokens)
-//   = 0  → collect fees only
+//	> 0  → add liquidity (user deposits tokens)
+//	< 0  → remove liquidity (user withdraws tokens)
+//	= 0  → collect fees only
 //
 // -----------------------------------------------------------------------------
 // Returned values:
 //
-//   delta     → principal token0/token1 change from liquidity modification
-//   feeDelta  → fees owed to the position
+//	delta     → principal token0/token1 change from liquidity modification
+//	feeDelta  → fees owed to the position
 func (p *Pool) ModifyLiquidity(params ModifyLiquidityParams) (delta, feeDelta BalanceDelta, err error) {
 	liquidityDelta := params.LiquidityDelta
 	tickLower := params.TickLower
@@ -364,7 +366,7 @@ func (p *Pool) ModifyLiquidity(params ModifyLiquidityParams) (delta, feeDelta Ba
 	if err != nil {
 		return
 	}
-	
+
 	feeDelta = NewBalanceDelta(feesOwed0, feesOwed1)
 
 	if liquidityDelta.Sign() < 0 {
@@ -394,7 +396,7 @@ func (p *Pool) ModifyLiquidity(params ModifyLiquidityParams) (delta, feeDelta Ba
 			if err != nil {
 				return
 			}
-			
+
 			if liquidityDelta.Sign() < 0 {
 				amount0, err = utils.GetAmount0Delta(tickLowerSqrtPrice, tickUpperSqrtPrice, new(big.Int).Abs(liquidityDelta), false)
 				if err != nil {
@@ -407,7 +409,7 @@ func (p *Pool) ModifyLiquidity(params ModifyLiquidityParams) (delta, feeDelta Ba
 				}
 				amount0 = amount0.Neg(amount0)
 			}
-			
+
 			delta = NewBalanceDelta(amount0, big.NewInt(0))
 		} else if tick < tickUpper {
 			tickUpperSqrtPrice, err = utils.GetSqrtPriceAtTick(tickUpper)
@@ -427,7 +429,7 @@ func (p *Pool) ModifyLiquidity(params ModifyLiquidityParams) (delta, feeDelta Ba
 				}
 				amount0 = amount0.Neg(amount0)
 			}
-			
+
 			tickLowerSqrtPrice, err = utils.GetSqrtPriceAtTick(tickLower)
 			if err != nil {
 				return
@@ -553,11 +555,11 @@ type SwapParams struct {
 //
 // Parameters:
 //   - params: SwapParams containing the following:
-//       * ZeroForOne: direction of the swap (true if swapping token0 for token1)
-//       * AmountSpecified: the exact amount in or out for the swap
-//       * SqrtPriceLimitX96: the boundary price for the swap (swap stops if crossed)
-//       * TickSpacing: tick spacing of the pool (used for tick crossing calculations)
-//       * LpFeeOverride: optional LP fee override (validated if set)
+//   - ZeroForOne: direction of the swap (true if swapping token0 for token1)
+//   - AmountSpecified: the exact amount in or out for the swap
+//   - SqrtPriceLimitX96: the boundary price for the swap (swap stops if crossed)
+//   - TickSpacing: tick spacing of the pool (used for tick crossing calculations)
+//   - LpFeeOverride: optional LP fee override (validated if set)
 //
 // Returns:
 //   - swapDelta: BalanceDelta representing net token deltas for the swap
@@ -575,22 +577,22 @@ type SwapParams struct {
 //   - Tick crossing and liquidity updates are performed only when initialized ticks are crossed.
 //
 // Implementation Details:
-//   1. Copy current pool slot0 state to local variables for calculation safety.
-//   2. Determine swap direction (zeroForOne) and fetch protocol fees.
-//   3. Initialize amount remaining, amount calculated, and swap result snapshot.
-//   4. Compute effective swap fee (protocol + LP fee), validating against MaxSwapFee.
-//   5. Perform boundary checks for SqrtPriceLimitX96 to prevent invalid swaps.
-//   6. Initialize StepComputations struct for iterative swap step processing.
-//   7. Loop over swap steps until either amountSpecifiedRemaining == 0 or price limit reached:
-//       a. Determine next initialized tick within one word (tick crossing logic)
-//       b. Compute sqrtPriceNextX96 from TickNext
-//       c. Perform ComputeSwapStep to calculate amountIn, amountOut, and feeAmount
-//       d. Update amountSpecifiedRemaining and amountCalculated based on swap direction
-//       e. Deduct protocol fees from step.FeeAmount and accumulate in amountToProtocol
-//       f. Update fee growth globals for LPs
-//       g. Handle tick crossing and adjust result.Tick and result.Liquidity
-//   8. After loop, update pool slot0 and liquidity state with final result.
-//   9. Compute final swapDelta based on exact input/output direction.
+//  1. Copy current pool slot0 state to local variables for calculation safety.
+//  2. Determine swap direction (zeroForOne) and fetch protocol fees.
+//  3. Initialize amount remaining, amount calculated, and swap result snapshot.
+//  4. Compute effective swap fee (protocol + LP fee), validating against MaxSwapFee.
+//  5. Perform boundary checks for SqrtPriceLimitX96 to prevent invalid swaps.
+//  6. Initialize StepComputations struct for iterative swap step processing.
+//  7. Loop over swap steps until either amountSpecifiedRemaining == 0 or price limit reached:
+//     a. Determine next initialized tick within one word (tick crossing logic)
+//     b. Compute sqrtPriceNextX96 from TickNext
+//     c. Perform ComputeSwapStep to calculate amountIn, amountOut, and feeAmount
+//     d. Update amountSpecifiedRemaining and amountCalculated based on swap direction
+//     e. Deduct protocol fees from step.FeeAmount and accumulate in amountToProtocol
+//     f. Update fee growth globals for LPs
+//     g. Handle tick crossing and adjust result.Tick and result.Liquidity
+//  8. After loop, update pool slot0 and liquidity state with final result.
+//  9. Compute final swapDelta based on exact input/output direction.
 //
 // Errors:
 //   - ErrSwapFeeTooHigh: if computed swap fee exceeds MaxSwapFee
@@ -620,13 +622,13 @@ func (p *Pool) Swap(params SwapParams) (swapDelta BalanceDelta, amountToProtocol
 
 	lpFee := slot0Start.LPFee
 
-	if params.LpFeeOverride.IsOverride()  {
+	if params.LpFeeOverride.IsOverride() {
 		lpFee, err = params.LpFeeOverride.RemoveOverrideFlagAndValidate()
 		if err != nil {
 			return
 		}
 	}
-	
+
 	if protocolFee == 0 {
 		swapFee = uint32(lpFee)
 	} else {
@@ -647,7 +649,7 @@ func (p *Pool) Swap(params SwapParams) (swapDelta BalanceDelta, amountToProtocol
 		if params.SqrtPriceLimitX96.Cmp(slot0Start.SqrtPriceX96) >= 0 {
 			return BalanceDelta{}, nil, 0, SwapResult{}, ErrSqrtPriceLimitExceeded
 		}
-		if params.SqrtPriceLimitX96.Cmp(utils.MinSqrtPrice) <=0 {
+		if params.SqrtPriceLimitX96.Cmp(utils.MinSqrtPrice) <= 0 {
 			return BalanceDelta{}, nil, 0, SwapResult{}, ErrSqrtPriceLimitExceeded
 		}
 	} else {
@@ -660,13 +662,13 @@ func (p *Pool) Swap(params SwapParams) (swapDelta BalanceDelta, amountToProtocol
 	}
 
 	step := StepComputations{
-		SqrtPriceStartX96: big.NewInt(0),
-		TickNext: 0,
-		Initialized: false,
-		SqrtPriceNextX96: big.NewInt(0),
-		AmountIn: big.NewInt(0),
-		AmountOut: big.NewInt(0),
-		FeeAmount: big.NewInt(0),
+		SqrtPriceStartX96:   big.NewInt(0),
+		TickNext:            0,
+		Initialized:         false,
+		SqrtPriceNextX96:    big.NewInt(0),
+		AmountIn:            big.NewInt(0),
+		AmountOut:           big.NewInt(0),
+		FeeAmount:           big.NewInt(0),
 		FeeGrowthGlobalX128: big.NewInt(0),
 	}
 
@@ -683,7 +685,7 @@ func (p *Pool) Swap(params SwapParams) (swapDelta BalanceDelta, amountToProtocol
 		if err != nil {
 			return
 		}
-		
+
 		if step.TickNext <= utils.MinTick {
 			step.TickNext = utils.MinTick
 		}
@@ -691,18 +693,18 @@ func (p *Pool) Swap(params SwapParams) (swapDelta BalanceDelta, amountToProtocol
 			step.TickNext = utils.MaxTick
 		}
 
-		step.SqrtPriceNextX96, err = utils.GetSqrtPriceAtTick(step.TickNext);
+		step.SqrtPriceNextX96, err = utils.GetSqrtPriceAtTick(step.TickNext)
 		if err != nil {
 			return
 		}
 
 		result.SqrtPriceX96, step.AmountIn, step.AmountOut, step.FeeAmount, err = utils.ComputeSwapStep(
-                result.SqrtPriceX96,
-                utils.GetSqrtPriceTarget(zeroForOne, step.SqrtPriceNextX96, params.SqrtPriceLimitX96),
-                result.Liquidity,
-                amountSpecifiedRemaining,
-                swapFee,
-            );
+			result.SqrtPriceX96,
+			utils.GetSqrtPriceTarget(zeroForOne, step.SqrtPriceNextX96, params.SqrtPriceLimitX96),
+			result.Liquidity,
+			amountSpecifiedRemaining,
+			swapFee,
+		)
 		if err != nil {
 			return
 		}
@@ -748,14 +750,14 @@ func (p *Pool) Swap(params SwapParams) (swapDelta BalanceDelta, amountToProtocol
 				} else {
 					feeGrowthGlobal0X128, feeGrowthGlobal1X128 = p.feeGrowthGlobal0X128, step.FeeGrowthGlobalX128
 				}
-				
+
 				liquidityNet := p.CrossTick(step.TickNext, feeGrowthGlobal0X128, feeGrowthGlobal1X128)
-				
+
 				if zeroForOne {
 					liquidityNet = new(big.Int).Neg(liquidityNet)
 				}
 
-				result.Liquidity = utils.AddDelta(result.Liquidity, liquidityNet);
+				result.Liquidity = utils.AddDelta(result.Liquidity, liquidityNet)
 			}
 
 			if zeroForOne {

@@ -1,4 +1,4 @@
-<p align="center"><img width="150" src="logo.png" alt="Vue logo"></p>
+<p align="center"><img width="150" src="logo.png" alt="go-uniswap logo"></p>
 
 <div align="center">
 

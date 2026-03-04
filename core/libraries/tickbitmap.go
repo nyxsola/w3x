@@ -121,11 +121,11 @@ func (tb *TickBitmap) NextInitializedTickWithinOneWord(tick int, tickSpacing int
 			word = big.NewInt(0)
 		}
 		maxUint256 := new(big.Int).Sub(new(big.Int).Lsh(big.NewInt(1), 256), big.NewInt(1))
-		mask := new(big.Int).Rsh(maxUint256, uint(255 - bitPos))                          
-		masked := big.NewInt(0).And(word, mask)                   
+		mask := new(big.Int).Rsh(maxUint256, uint(255-bitPos))
+		masked := big.NewInt(0).And(word, mask)
 
 		initialized = masked.Sign() != 0
-		
+
 		if initialized {
 			msb, err := utils.MostSignificantBit(masked)
 			if err != nil {
@@ -138,15 +138,15 @@ func (tb *TickBitmap) NextInitializedTickWithinOneWord(tick int, tickSpacing int
 	} else {
 		compressed++
 		wordPos, bitPos := position(compressed)
-		
+
 		word, ok := tb.words[wordPos]
 		if !ok {
 			word = big.NewInt(0)
 		}
 
-		mask := new(big.Int).Lsh(big.NewInt(1), uint(bitPos)) 
-		mask.Sub(mask, big.NewInt(1))                  
-		mask.Not(mask)                                 
+		mask := new(big.Int).Lsh(big.NewInt(1), uint(bitPos))
+		mask.Sub(mask, big.NewInt(1))
+		mask.Not(mask)
 
 		masked := new(big.Int).And(word, mask)
 
@@ -158,7 +158,7 @@ func (tb *TickBitmap) NextInitializedTickWithinOneWord(tick int, tickSpacing int
 			if err != nil {
 				return 0, false, err
 			}
-			next = (compressed + (lsb-int(bitPos))) * tickSpacing
+			next = (compressed + (lsb - int(bitPos))) * tickSpacing
 		} else {
 			next = (compressed + (255 - int(bitPos))) * tickSpacing
 		}

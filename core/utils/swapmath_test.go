@@ -63,7 +63,7 @@ func TestComputeSwapStepExactInOneForZero(t *testing.T) {
 	liquidity := big.NewInt(1_000_000)
 	sqrtPriceCurrent := big.NewInt(120)
 	sqrtPriceTarget := big.NewInt(100)
-	amountRemaining := big.NewInt(-5_000) 
+	amountRemaining := big.NewInt(-5_000)
 	feePips := uint32(3000)
 
 	sqrtNext, amountIn, amountOut, feeAmount, err := ComputeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips)
@@ -78,7 +78,7 @@ func TestComputeSwapStepExactOutOneForZero(t *testing.T) {
 	liquidity := big.NewInt(1_000_000)
 	sqrtPriceCurrent := big.NewInt(120)
 	sqrtPriceTarget := big.NewInt(100)
-	amountRemaining := big.NewInt(5_000) 
+	amountRemaining := big.NewInt(5_000)
 	feePips := uint32(3000)
 
 	sqrtNext, amountIn, amountOut, feeAmount, err := ComputeSwapStep(sqrtPriceCurrent, sqrtPriceTarget, liquidity, amountRemaining, feePips)

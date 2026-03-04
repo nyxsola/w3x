@@ -1,4 +1,4 @@
-package libraries
+package sdkcore
 
 import (
 	"fmt"
@@ -18,7 +18,8 @@ type Fraction struct {
 // NewFraction creates a new Fraction with the given numerator and denominator.
 //
 // Example:
-// 	f := NewFraction(big.NewInt(3), big.NewInt(4)) // 3/4
+//
+//	f := NewFraction(big.NewInt(3), big.NewInt(4)) // 3/4
 func NewFraction(numerator, denominator *big.Int) *Fraction {
 	return &Fraction{
 		Numerator:   numerator,
@@ -29,7 +30,8 @@ func NewFraction(numerator, denominator *big.Int) *Fraction {
 // Quotient returns the integer part of the fraction (floor division).
 //
 // Example:
-// 	NewFraction(7, 3).Quotient() // returns 2
+//
+//	NewFraction(7, 3).Quotient() // returns 2
 func (f *Fraction) Quotient() *big.Int {
 	return new(big.Int).Div(f.Numerator, f.Denominator)
 }
@@ -37,7 +39,8 @@ func (f *Fraction) Quotient() *big.Int {
 // Remainder returns the remainder of the fraction after floor division as a new Fraction.
 //
 // Example:
-// 	NewFraction(7, 3).Remainder() // returns 1/3
+//
+//	NewFraction(7, 3).Remainder() // returns 1/3
 func (f *Fraction) Remainder() *Fraction {
 	return NewFraction(new(big.Int).Rem(f.Numerator, f.Denominator), f.Denominator)
 }
@@ -45,7 +48,8 @@ func (f *Fraction) Remainder() *Fraction {
 // Invert returns the reciprocal of the fraction.
 //
 // Example:
-// 	NewFraction(3, 4).Invert() // returns 4/3
+//
+//	NewFraction(3, 4).Invert() // returns 4/3
 func (f *Fraction) Invert() *Fraction {
 	return NewFraction(f.Denominator, f.Numerator)
 }
@@ -53,7 +57,8 @@ func (f *Fraction) Invert() *Fraction {
 // Add returns a new Fraction representing f + other.
 //
 // Example:
-// 	NewFraction(1,2).Add(NewFraction(1,3)) // returns 5/6
+//
+//	NewFraction(1,2).Add(NewFraction(1,3)) // returns 5/6
 func (f *Fraction) Add(other *Fraction) *Fraction {
 	if f.Denominator.Cmp(other.Denominator) == 0 {
 		return NewFraction(new(big.Int).Add(f.Numerator, other.Numerator), f.Denominator)
@@ -66,7 +71,8 @@ func (f *Fraction) Add(other *Fraction) *Fraction {
 // Subtract returns a new Fraction representing f - other.
 //
 // Example:
-// 	NewFraction(3,4).Subtract(NewFraction(1,2)) // returns 1/4
+//
+//	NewFraction(3,4).Subtract(NewFraction(1,2)) // returns 1/4
 func (f *Fraction) Subtract(other *Fraction) *Fraction {
 	if f.Denominator.Cmp(other.Denominator) == 0 {
 		return NewFraction(new(big.Int).Sub(f.Numerator, other.Numerator), f.Denominator)
@@ -79,7 +85,8 @@ func (f *Fraction) Subtract(other *Fraction) *Fraction {
 // Multiply returns a new Fraction representing f * other.
 //
 // Example:
-// 	NewFraction(2,3).Multiply(NewFraction(3,4)) // returns 1/2
+//
+//	NewFraction(2,3).Multiply(NewFraction(3,4)) // returns 1/2
 func (f *Fraction) Multiply(other *Fraction) *Fraction {
 	return NewFraction(new(big.Int).Mul(f.Numerator, other.Numerator), new(big.Int).Mul(f.Denominator, other.Denominator))
 }
@@ -87,7 +94,8 @@ func (f *Fraction) Multiply(other *Fraction) *Fraction {
 // Divide returns a new Fraction representing f / other.
 //
 // Example:
-// 	NewFraction(2,3).Divide(NewFraction(3,4)) // returns 8/9
+//
+//	NewFraction(2,3).Divide(NewFraction(3,4)) // returns 8/9
 func (f *Fraction) Divide(other *Fraction) *Fraction {
 	return NewFraction(new(big.Int).Mul(f.Numerator, other.Denominator), new(big.Int).Mul(f.Denominator, other.Numerator))
 }
@@ -95,7 +103,8 @@ func (f *Fraction) Divide(other *Fraction) *Fraction {
 // LessThan returns true if f < other.
 //
 // Example:
-// 	NewFraction(1,2).LessThan(NewFraction(2,3)) // true
+//
+//	NewFraction(1,2).LessThan(NewFraction(2,3)) // true
 func (f *Fraction) LessThan(other *Fraction) bool {
 	return new(big.Int).Mul(f.Numerator, other.Denominator).Cmp(new(big.Int).Mul(other.Numerator, f.Denominator)) < 0
 }
@@ -103,7 +112,8 @@ func (f *Fraction) LessThan(other *Fraction) bool {
 // EqualTo returns true if f == other.
 //
 // Example:
-// 	NewFraction(1,2).EqualTo(NewFraction(2,4)) // true
+//
+//	NewFraction(1,2).EqualTo(NewFraction(2,4)) // true
 func (f *Fraction) EqualTo(other *Fraction) bool {
 	return new(big.Int).Mul(f.Numerator, other.Denominator).Cmp(new(big.Int).Mul(other.Numerator, f.Denominator)) == 0
 }
@@ -111,7 +121,8 @@ func (f *Fraction) EqualTo(other *Fraction) bool {
 // GreaterThan returns true if f > other.
 //
 // Example:
-// 	NewFraction(3,4).GreaterThan(NewFraction(2,3)) // true
+//
+//	NewFraction(3,4).GreaterThan(NewFraction(2,3)) // true
 func (f *Fraction) GreaterThan(other *Fraction) bool {
 	return new(big.Int).Mul(f.Numerator, other.Denominator).Cmp(new(big.Int).Mul(other.Numerator, f.Denominator)) > 0
 }
@@ -119,7 +130,8 @@ func (f *Fraction) GreaterThan(other *Fraction) bool {
 // ToSignificant returns a string representing the fraction rounded to the specified number of significant digits.
 //
 // Example:
-// 	NewFraction(big.NewInt(125), big.NewInt(1)).ToSignificant(2) // "130"
+//
+//	NewFraction(big.NewInt(125), big.NewInt(1)).ToSignificant(2) // "130"
 func (f *Fraction) ToSignificant(significantDigits int32) string {
 	return roundToSignificantFigures(f, significantDigits).String()
 }
@@ -127,7 +139,8 @@ func (f *Fraction) ToSignificant(significantDigits int32) string {
 // ToFixed returns a string representing the fraction rounded to a fixed number of decimal places.
 //
 // Example:
-// 	NewFraction(big.NewInt(1), big.NewInt(3)).ToFixed(2) // "0.33"
+//
+//	NewFraction(big.NewInt(1), big.NewInt(3)).ToFixed(2) // "0.33"
 func (f *Fraction) ToFixed(decimalPlaces int32) string {
 	return decimal.NewFromBigInt(f.Numerator, 0).Div(decimal.NewFromBigInt(f.Denominator, 0)).StringFixed(decimalPlaces)
 }

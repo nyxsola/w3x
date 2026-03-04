@@ -1,4 +1,4 @@
-package libraries
+package sdkcore
 
 import (
 	"github.com/aicora/go-uniswap/core/interfaces"
