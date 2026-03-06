@@ -3,7 +3,7 @@ package libraries
 import (
 	"testing"
 
-	"github.com/aicora/go-uniswap/amm/interfaces"
+	"github.com/aicora/w3x/amm/interfaces"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
 )

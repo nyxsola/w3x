@@ -1,4 +1,4 @@
-module github.com/aicora/go-uniswap
+module github.com/aicora/w3x
 
 go 1.24.0
 

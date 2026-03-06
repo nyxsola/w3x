@@ -3,7 +3,7 @@ package uniswapsdkcore
 import (
 	"math/big"
 
-	"github.com/aicora/go-uniswap/amm/utils"
+	"github.com/aicora/w3x/amm/utils"
 	"github.com/shopspring/decimal"
 )
 

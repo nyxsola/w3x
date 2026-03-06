@@ -3,7 +3,7 @@ package uniswapsdkv4
 import (
 	"strings"
 
-	uniswapv3periphery "github.com/aicora/go-uniswap/dex/uniswap/v3-periphery"
+	uniswapv3periphery "github.com/aicora/w3x/dex/uniswap/v3-periphery"
 	"github.com/pkg/errors"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"

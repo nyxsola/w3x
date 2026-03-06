@@ -6,9 +6,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 
-	"github.com/aicora/go-uniswap/amm/libraries"
-	"github.com/aicora/go-uniswap/amm/types"
-	"github.com/aicora/go-uniswap/amm/utils"
+	"github.com/aicora/w3x/amm/libraries"
+	"github.com/aicora/w3x/amm/types"
+	"github.com/aicora/w3x/amm/utils"
 )
 
 var (

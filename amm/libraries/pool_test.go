@@ -5,7 +5,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/aicora/go-uniswap/amm/utils"
+	"github.com/aicora/w3x/amm/utils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
 )

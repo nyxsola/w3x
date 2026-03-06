@@ -1,7 +1,7 @@
 package libraries
 
 import (
-	"github.com/aicora/go-uniswap/amm/interfaces"
+	"github.com/aicora/w3x/amm/interfaces"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 )

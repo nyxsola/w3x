@@ -3,7 +3,7 @@ package uniswapsdkv4
 import (
 	"math/big"
 
-	uniswapsdkv3 "github.com/aicora/go-uniswap/dex/uniswap/v3"
+	uniswapsdkv3 "github.com/aicora/w3x/dex/uniswap/v3"
 	"github.com/ethereum/go-ethereum/common"
 )
 
