@@ -1,7 +1,7 @@
 .PHONY: fmt test
 
 fmt:
-	gofmt -w .
+	gofmt -s -w .
 
 test:
 	go test ./... -coverprofile=coverage.out
