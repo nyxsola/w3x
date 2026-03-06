@@ -1,0 +1,3 @@
+package uniswapsdkv4
+
+const MsgSender = "0x0000000000000000000000000000000000000001"
