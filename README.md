@@ -1,18 +1,14 @@
-<p align="center"><img width="150" src="logo.png" alt="go-uniswap logo"></p>
+<p align="center"><img width="100%" src="banner.png" alt="w3x banner"></p>
 
 <div align="center">
 
-[![build status](https://github.com/aicora/go-uniswap/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aicora/go-uniswap/actions/workflows/ci.yml)
-[![Codecov](https://img.shields.io/codecov/c/github/aicora/go-uniswap?logo=codecov&colorB=orange)](https://app.codecov.io/gh/aicora/go-uniswap)
-[![Go Report Card](https://goreportcard.com/badge/github.com/aicora/go-uniswap)](https://goreportcard.com/report/github.com/aicora/go-uniswap)
-[![Go Reference](https://img.shields.io/badge/Go%20Reference-blue.svg?logo=go&logoColor=white)](https://pkg.go.dev/github.com/aicora/go-uniswap)
-[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/aicora/go-uniswap/blob/main/LICENSE)
-[![Good First Issues](https://img.shields.io/github/issues/aicora/go-uniswap/good%20first%20issue?logo=github)](https://github.com/aicora/go-uniswap/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22good+first+issue%22)
+[![build status](https://github.com/aicora/w3x/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aicora/w3x/actions/workflows/ci.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/aicora/w3x?logo=codecov&colorB=orange)](https://app.codecov.io/gh/aicora/w3x)
+[![Go Report Card](https://goreportcard.com/badge/github.com/aicora/w3x)](https://goreportcard.com/report/github.com/aicora/w3x)
+[![Go Reference](https://img.shields.io/badge/Go%20Reference-blue.svg?logo=go&logoColor=white)](https://pkg.go.dev/github.com/aicora/w3x)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/aicora/w3x/blob/main/LICENSE)
+[![Good First Issues](https://img.shields.io/github/issues/aicora/w3x/good%20first%20issue?logo=github)](https://github.com/aicora/w3x/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22good+first+issue%22)
 [![Language](https://img.shields.io/badge/Language-Go-blue.svg?logo=go&logoColor=white)](https://golang.org/)
-
-<p align="center">
-  <a href="./README.md">English</a> · 
-</p>
 
 </div>
 
@@ -25,17 +21,17 @@ It’s designed for centralized engines, simulation, backtesting, and quoting en
 
 ## Changelog
 
-Detailed changes for each release are documented in the [release notes](https://github.com/aicora/go-uniswap/releases).
+Detailed changes for each release are documented in the [release notes](https://github.com/aicora/w3x/releases).
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=aicora/go-uniswap&type=timeline&legend=top-left)](https://www.star-history.com/#aicora/go-uniswap&type=timeline&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=aicora/w3x&type=timeline&legend=top-left)](https://www.star-history.com/#aicora/w3x&type=timeline&legend=top-left)
 
 ## Contribution
 
-Thank you to all the people who already contributed to go-uniswap!
+Thank you to all the people who already contributed to w3x!
 
-![Contributors](https://contrib.rocks/image?repo=aicora/go-uniswap)
+![Contributors](https://contrib.rocks/image?repo=aicora/w3x)
 
 ## License
 
